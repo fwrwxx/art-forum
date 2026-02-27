@@ -1649,10 +1649,8 @@ navLinks.forEach(link => {
 
 ## 📌 Посилання на проєкт
 
-- **Репозиторій:** [https://github.com/fwrwxx/art-forum.git](https://github.com/your-username/art-forum-shop-auction)
+- **Репозиторій:** [https://github.com/fwrwxx/art-forum.git](https://github.com/fwrwxx/art-forum)
 - **Жива сторінка:** [//](//)
-- **Звітний HTML-документ:** [//](//)
-
 ---
 
 *© Штифлюк Ольга Володимирівна 2026*
