@@ -183,8 +183,6 @@ graph TB
     Admin --> ModerateForum
     Admin --> ModerateShop
     Admin --> ModerateAuction
-    
-    end
 ```
 
 **Опис діаграми:**
@@ -305,110 +303,110 @@ erDiagram
 
 ```mermaid
 graph TD
-    subgraph "Header (Шапка сайту)"
-        H1[Логотип - ArtHub]
-        H2[Навігаційне меню]
-        H3[Кнопки автентифікації]
+    subgraph Header["Header (Шапка сайту)"]
+        H1["Логотип - ArtHub"]
+        H2["Навігаційне меню"]
+        H3["Кнопки автентифікації"]
         
-        subgraph "Навігаційне меню (десктоп)"
-            N1[Форум]
-            N2[Магазин]
-            N3[Аукціон]
-            N4[Про нас]
+        subgraph NavDesktop["Навігаційне меню (десктоп)"]
+            N1["Форум"]
+            N2["Магазин"]
+            N3["Аукціон"]
+            N4["Про нас"]
         end
         
-        subgraph "Бургер-меню (мобільне)"
-            B1[Іконка бургера ☰]
-            B2[Вертикальне меню]
+        subgraph BurgerMenu["Бургер-меню (мобільне)"]
+            B1["Іконка бургера"]
+            B2["Вертикальне меню"]
         end
         
-        subgraph "Кнопки автентифікації"
-            A1[Увійти]
-            A2[Реєстрація]
-        end
-    end
-    
-    subgraph "Main (Основний контент)"
-        M1[Hero-секція]
-        M2[Сітка карток]
-        M3[CTA-секція]
-        
-        subgraph "Hero-секція"
-            HERO1[Заголовок: "Творча спільнота для художників"]
-            HERO2[Підзаголовок]
-            HERO3[Кнопка "Приєднатися"]
-        end
-        
-        subgraph "Сітка карток - 3 колонки (десктоп)"
-            C1[Картка форуму]
-            C2[Картка магазину]
-            C3[Картка аукціону]
-            
-            subgraph "Картка форуму"
-                C1_IMG[Зображення]
-                C1_TITLE[Заголовок: "Форум"]
-                C1_DESC[Опис]
-                C1_BTN[Кнопка "Перейти"]
-            end
-            
-            subgraph "Картка магазину"
-                C2_IMG[Зображення]
-                C2_TITLE[Заголовок: "Магазин"]
-                C2_DESC[Опис]
-                C2_BTN[Кнопка "Перейти"]
-            end
-            
-            subgraph "Картка аукціону"
-                C3_IMG[Зображення]
-                C3_TITLE[Заголовок: "Аукціон"]
-                C3_DESC[Опис]
-                C3_BTN[Кнопка "Перейти"]
-            end
-        end
-        
-        subgraph "Сітка карток - 2 колонки (планшет)"
-            C_TAB[Картки розташовані в 2 колонки]
-        end
-        
-        subgraph "Сітка карток - 1 колонка (смартфон)"
-            C_MOB[Картки розташовані вертикально]
-        end
-        
-        subgraph "CTA-секція"
-            CTA1[Заголовок: "Готові долучитися?"]
-            CTA2[Текст]
-            CTA3[Кнопка "Створити акаунт"]
+        subgraph AuthButtons["Кнопки автентифікації"]
+            A1["Увійти"]
+            A2["Реєстрація"]
         end
     end
     
-    subgraph "Footer (Підвал)"
-        F1[Колонка 1: Про нас]
-        F2[Колонка 2: Навігація]
-        F3[Колонка 3: Контакти]
-        F4[Колонка 4: Соцмережі]
-        F5[Нижній колонтитул]
+    subgraph Main["Main (Основний контент)"]
+        M1["Hero-секція"]
+        M2["Сітка карток"]
+        M3["CTA-секція"]
         
-        subgraph "Колонка 1: Про нас"
-            F1_TITLE[Заголовок: "ArtHub"]
-            F1_TEXT[Опис платформи]
+        subgraph Hero["Hero-секція"]
+            HERO1["Заголовок: Творча спільнота для художників"]
+            HERO2["Підзаголовок"]
+            HERO3["Кнопка: Приєднатися"]
         end
         
-        subgraph "Колонка 2: Навігація"
-            F2_LINKS[Посилання: Форум, Магазин, Аукціон]
+        subgraph GridDesktop["Сітка карток - 3 колонки (десктоп)"]
+            C1["Картка форуму"]
+            C2["Картка магазину"]
+            C3["Картка аукціону"]
+            
+            subgraph CardForum["Картка форуму"]
+                C1_IMG["Зображення"]
+                C1_TITLE["Заголовок: Форум"]
+                C1_DESC["Опис"]
+                C1_BTN["Кнопка: Перейти"]
+            end
+            
+            subgraph CardShop["Картка магазину"]
+                C2_IMG["Зображення"]
+                C2_TITLE["Заголовок: Магазин"]
+                C2_DESC["Опис"]
+                C2_BTN["Кнопка: Перейти"]
+            end
+            
+            subgraph CardAuction["Картка аукціону"]
+                C3_IMG["Зображення"]
+                C3_TITLE["Заголовок: Аукціон"]
+                C3_DESC["Опис"]
+                C3_BTN["Кнопка: Перейти"]
+            end
         end
         
-        subgraph "Колонка 3: Контакти"
-            F3_EMAIL[Email: info@arthub.com]
-            F3_PHONE[Телефон]
+        subgraph GridTablet["Сітка карток - 2 колонки (планшет)"]
+            C_TAB["Картки розташовані в 2 колонки"]
         end
         
-        subgraph "Колонка 4: Соцмережі"
-            F4_ICONS[Іконки Facebook, Instagram, Twitter]
+        subgraph GridMobile["Сітка карток - 1 колонка (смартфон)"]
+            C_MOB["Картки розташовані вертикально"]
         end
         
-        subgraph "Нижній колонтитул"
-            F5_COPY[Копірайт]
-            F5_LINKS[Політика, Умови]
+        subgraph CTA["CTA-секція"]
+            CTA1["Заголовок: Готові долучитися?"]
+            CTA2["Текст"]
+            CTA3["Кнопка: Створити акаунт"]
+        end
+    end
+    
+    subgraph Footer["Footer (Підвал)"]
+        F1["Колонка 1: Про нас"]
+        F2["Колонка 2: Навігація"]
+        F3["Колонка 3: Контакти"]
+        F4["Колонка 4: Соцмережі"]
+        F5["Нижній колонтитул"]
+        
+        subgraph Col1["Колонка 1: Про нас"]
+            F1_TITLE["Заголовок: ArtHub"]
+            F1_TEXT["Опис платформи"]
+        end
+        
+        subgraph Col2["Колонка 2: Навігація"]
+            F2_LINKS["Посилання: Форум, Магазин, Аукціон"]
+        end
+        
+        subgraph Col3["Колонка 3: Контакти"]
+            F3_EMAIL["Email: info@arthub.com"]
+            F3_PHONE["Телефон"]
+        end
+        
+        subgraph Col4["Колонка 4: Соцмережі"]
+            F4_ICONS["Іконки Facebook, Instagram, Twitter"]
+        end
+        
+        subgraph Bottom["Нижній колонтитул"]
+            F5_COPY["Копірайт"]
+            F5_LINKS["Політика, Умови"]
         end
     end
     
@@ -671,7 +669,7 @@ main
             </div>
             
             <ul class="nav-menu" id="nav-menu">
-                <li><a href="#" class="active">Головна</a></li>
+                <li><a href="index.html" class="active">Головна</a></li>
                 <li><a href="#">Форум</a></li>
                 <li><a href="#">Магазин</a></li>
                 <li><a href="#">Аукціон</a></li>
@@ -698,24 +696,30 @@ main
                 <h2>Наші можливості</h2>
                 <div class="card-grid">
                     <div class="card">
-                        <img src="assets/images/forum-icon.jpg" alt="Форум">
-                        <h3>Форум художників</h3>
-                        <p>Обговорюйте техніки, діліться досвідом та отримуйте зворотній зв'язок від колег</p>
-                        <a href="#" class="btn-secondary">Перейти до форуму →</a>
+                        <img src="assets/images/forum.jpg" alt="Форум">
+                        <div class="card-content">
+                            <h3>Форум художників</h3>
+                            <p>Обговорюйте техніки, діліться досвідом та отримуйте зворотній зв'язок від колег</p>
+                            <a href="#" class="btn-secondary">Перейти до форуму →</a>
+                        </div>
                     </div>
                     
                     <div class="card">
-                        <img src="assets/images/shop-icon.jpg" alt="Магазин">
-                        <h3>Магазин мистецтва</h3>
-                        <p>Продавайте свої роботи за фіксованою ціною або знаходьте унікальні твори</p>
-                        <a href="#" class="btn-secondary">Перейти до магазину →</a>
+                        <img src="assets/images/shop.jpg" alt="Магазин">
+                        <div class="card-content">
+                            <h3>Магазин мистецтва</h3>
+                            <p>Продавайте свої роботи за фіксованою ціною або знаходьте унікальні твори</p>
+                            <a href="#" class="btn-secondary">Перейти до магазину →</a>
+                        </div>
                     </div>
                     
                     <div class="card">
-                        <img src="assets/images/auction-icon.jpg" alt="Аукціон">
-                        <h3>Аукціон</h3>
-                        <p>Беріть участь у торгах за унікальні роботи або виставляйте власні лоти</p>
-                        <a href="#" class="btn-secondary">Перейти до аукціону →</a>
+                        <img src="assets/images/auction.webp" alt="Аукціон">
+                        <div class="card-content">
+                            <h3>Аукціон</h3>
+                            <p>Беріть участь у торгах за унікальні роботи або виставляйте власні лоти</p>
+                            <a href="#" class="btn-secondary">Перейти до аукціону →</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -735,13 +739,13 @@ main
             <div class="footer-content">
                 <div class="footer-section">
                     <h4>ArtHub</h4>
-                    <p>Платформа для художників, що об'єднує форум, магазин та аукціон в одному місці.</p>
+                    <p>Форум, магазин та аукціон в одному місці.</p>
                 </div>
                 
                 <div class="footer-section">
                     <h4>Навігація</h4>
                     <ul>
-                        <li><a href="#">Головна</a></li>
+                        <li><a href="index.html">Головна</a></li>
                         <li><a href="#">Форум</a></li>
                         <li><a href="#">Магазин</a></li>
                         <li><a href="#">Аукціон</a></li>
@@ -752,22 +756,22 @@ main
                 <div class="footer-section">
                     <h4>Контакти</h4>
                     <p>Email: info@arthub.com</p>
-                    <p>Телефон: +380 (44) 123-45-67</p>
+                    <p>Адреса: м. Київ, вул. Хрещатик, 1</p>
                 </div>
                 
                 <div class="footer-section">
                     <h4>Соціальні мережі</h4>
                     <div class="social-links">
-                        <a href="#"><img src="assets/icons/facebook-icon.svg" alt="Facebook"></a>
-                        <a href="#"><img src="assets/icons/instagram-icon.svg" alt="Instagram"></a>
-                        <a href="#"><img src="assets/icons/twitter-icon.svg" alt="Twitter"></a>
-                        <a href="#"><img src="assets/icons/pinterest-icon.svg" alt="Pinterest"></a>
+                        <a href="#"><img src="assets/icons/facebook.png" alt="Facebook"></a>
+                        <a href="#"><img src="assets/icons/instagram.png" alt="Instagram"></a>
+                        <a href="#"><img src="assets/icons/twitter.png" alt="Twitter"></a>
+                        <a href="#"><img src="assets/icons/pinterest.png" alt="Pinterest"></a>
                     </div>
                 </div>
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2025 ArtHub. Всі права захищені.</p>
+                <p>&copy; 2026 ArtHub. Всі права захищені.</p>
                 <div class="footer-links">
                     <a href="#">Політика конфіденційності</a>
                     <a href="#">Умови використання</a>
@@ -786,16 +790,22 @@ main
 ```css
 /* ===== ЗМІННІ ТА СКИДАННЯ ===== */
 :root {
-    --primary-color: #4a6fa5;
-    --secondary-color: #6b4e71;
-    --accent-color: #c0a080;
-    --text-dark: #333333;
-    --text-light: #666666;
-    --bg-light: #f8f9fa;
-    --white: #ffffff;
+    --primary-color: #2E8B57;      /* Смарагдовий */
+    --primary-dark: #1f5f3a;       /* Темно-смарагдовий */
+    --primary-light: #4da675;      /* Світло-смарагдовий */
+    --secondary-color: #D4AF37;    /* Золотий */
+    --secondary-dark: #b8960c;      /* Темно-золотий */
+    --secondary-light: #e5c158;     /* Світло-золотий */
+    --accent-color: #8B5A2B;        /* Бронзовий (доповнюючий) */
+    --text-dark: #2C3E50;           /* Темно-синій для тексту */
+    --text-light: #5D6D7E;          /* Світло-сірий для тексту */
+    --bg-light: #F5F5F5;            /* Світлий фон */
+    --white: #FFFFFF;
     --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     --shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.15);
+    --shadow-gold: 0 4px 12px rgba(212, 175, 55, 0.3);
     --transition: all 0.3s ease;
+    --border-radius: 8px;
 }
 
 * {
@@ -816,13 +826,19 @@ body {
     margin: 0 auto;
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+}
+
 /* ===== HEADER ===== */
 header {
-    background-color: var(--white);
+    background: linear-gradient(135deg, var(--white) 0%, #f9f6e8 100%);
     box-shadow: var(--shadow);
     position: sticky;
     top: 0;
     z-index: 1000;
+    border-bottom: 2px solid var(--secondary-color);
 }
 
 .navbar {
@@ -838,12 +854,16 @@ header {
     gap: 0.5rem;
     font-size: 1.5rem;
     font-weight: bold;
-    color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .logo img {
     width: 32px;
     height: 32px;
+    filter: drop-shadow(0 2px 4px rgba(212, 175, 55, 0.3));
 }
 
 .nav-menu {
@@ -858,11 +878,28 @@ header {
     color: var(--text-dark);
     font-weight: 500;
     transition: var(--transition);
+    position: relative;
 }
 
 .nav-menu a:hover,
 .nav-menu a.active {
     color: var(--primary-color);
+}
+
+.nav-menu a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    transition: width 0.3s ease;
+}
+
+.nav-menu a:hover::after,
+.nav-menu a.active::after {
+    width: 100%;
 }
 
 .auth-buttons {
@@ -873,16 +910,34 @@ header {
 .btn-login,
 .btn-register {
     padding: 0.5rem 1rem;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
 }
 
 .btn-login {
-    border: 1px solid var(--primary-color);
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color) !important;
+    background: transparent;
+}
+
+.btn-login:hover {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: var(--white) !important;
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
 }
 
 .btn-register {
-    background-color: var(--primary-color);
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
     color: var(--white) !important;
+    border: 2px solid transparent;
+}
+
+.btn-register:hover {
+    background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-gold);
 }
 
 /* ===== БУРГЕР-МЕНЮ ===== */
@@ -890,61 +945,101 @@ header {
     display: none;
     flex-direction: column;
     cursor: pointer;
+    z-index: 1001;
 }
 
 .bar {
     width: 25px;
     height: 3px;
-    background-color: var(--text-dark);
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
     margin: 3px 0;
     transition: var(--transition);
+    border-radius: 2px;
 }
 
 /* ===== HERO СЕКЦІЯ ===== */
 .hero {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, 
+        rgba(47, 139, 87, 0.95), 
+        rgba(175, 170, 119, 0.9)),
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><path d="M20,20 Q40,10 60,20 T100,20" stroke="%23D4AF37" fill="none" stroke-width="2"/><circle cx="30" cy="50" r="5" fill="%23D4AF37"/><circle cx="70" cy="50" r="5" fill="%23D4AF37"/></svg>');
+    background-size: cover;
     color: var(--white);
     padding: 5rem 0;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgb(0 0 0 / 20%) 0%, transparent 50%);
 }
 
 .hero h1 {
     font-size: 2.5rem;
     margin-bottom: 1rem;
+    animation: fadeInDown 1s ease;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .hero p {
     font-size: 1.2rem;
     margin-bottom: 2rem;
-    opacity: 0.9;
+    opacity: 0.95;
+    animation: fadeInUp 1s ease 0.2s both;
 }
 
 .btn-primary {
     display: inline-block;
     padding: 0.75rem 1.5rem;
-    background-color: var(--white);
+    background: var(--white);
     color: var(--primary-color);
     text-decoration: none;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
     font-weight: 600;
     transition: var(--transition);
+    animation: fadeInUp 1s ease 0.4s both;
+    border: 2px solid transparent;
 }
 
 .btn-primary:hover {
+    background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+    color: var(--white);
     transform: translateY(-2px);
-    box-shadow: var(--shadow-hover);
+    box-shadow: var(--shadow-gold);
 }
 
 /* ===== СІТКА КАРТОК ===== */
 .features {
     padding: 4rem 0;
-    background-color: var(--bg-light);
+    background: linear-gradient(135deg, var(--bg-light) 0%, #f0f3e8 100%);
 }
 
 .features h2 {
     text-align: center;
     margin-bottom: 2rem;
     font-size: 2rem;
+    position: relative;
+    padding-bottom: 1rem;
+    color: var(--text-dark);
+}
+
+.features h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    border-radius: 2px;
 }
 
 .card-grid {
@@ -954,13 +1049,14 @@ header {
 }
 
 .card {
-    background-color: var(--white);
-    border-radius: 8px;
+    background: linear-gradient(135deg, var(--white) 0%, #f9f9f9 100%);
+    border-radius: var(--border-radius);
     overflow: hidden;
     box-shadow: var(--shadow);
     transition: var(--transition);
     animation: fadeInUp 0.6s ease forwards;
     opacity: 0;
+    border: 1px solid rgba(212, 175, 55, 0.1);
 }
 
 .card:nth-child(1) { animation-delay: 0.1s; }
@@ -978,9 +1074,21 @@ header {
     }
 }
 
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .card:hover {
-    transform: translateY(-10px);
-    box-shadow: var(--shadow-hover);
+    transform: translateY(-30px);
+    box-shadow: var(--shadow-gold);
+    border-color: var(--secondary-color);
 }
 
 .card img {
@@ -991,26 +1099,34 @@ header {
 }
 
 .card:hover img {
-    transform: scale(1.05);
+    transform: scale(1.1);
+}
+
+.card-content {
+    padding: 1.5rem;
 }
 
 .card h3 {
-    padding: 1rem 1rem 0.5rem;
     font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .card p {
-    padding: 0 1rem 1rem;
     color: var(--text-light);
+    margin-bottom: 1rem;
 }
 
 .btn-secondary {
     display: inline-block;
-    margin: 0 1rem 1rem;
     color: var(--primary-color);
     text-decoration: none;
     font-weight: 600;
     transition: var(--transition);
+    position: relative;
 }
 
 .btn-secondary:hover {
@@ -1022,12 +1138,13 @@ header {
 .cta {
     padding: 4rem 0;
     text-align: center;
-    background-color: var(--white);
+    background: linear-gradient(135deg, var(--white) 0%, #f9f6e8 100%);
 }
 
 .cta h2 {
     font-size: 2rem;
     margin-bottom: 1rem;
+    color: var(--text-dark);
 }
 
 .cta p {
@@ -1043,9 +1160,10 @@ header {
 
 /* ===== FOOTER ===== */
 footer {
-    background-color: var(--text-dark);
+    background: linear-gradient(135deg, var(--text-dark) 0%, #2e8b57 100%);
     color: var(--white);
     padding: 3rem 0 1rem;
+    border-top: 4px solid var(--secondary-color);
 }
 
 .footer-content {
@@ -1058,6 +1176,20 @@ footer {
 .footer-section h4 {
     margin-bottom: 1rem;
     font-size: 1.2rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+    color: var(--secondary-color);
+}
+
+.footer-section h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+    border-radius: 2px;
 }
 
 .footer-section ul {
@@ -1069,18 +1201,24 @@ footer {
 }
 
 .footer-section a {
-    color: #ccc;
+    color: #fff;
     text-decoration: none;
     transition: var(--transition);
 }
 
 .footer-section a:hover {
-    color: var(--white);
+    color: var(--secondary-color);
+    padding-left: 5px;
 }
 
 .social-links {
     display: flex;
     gap: 1rem;
+}
+
+.social-links a {
+    display: inline-block;
+    transition: var(--transition);
 }
 
 .social-links img {
@@ -1092,14 +1230,19 @@ footer {
 
 .social-links a:hover img {
     transform: scale(1.2);
+    filter: brightness(0) invert(0.8) sepia(1) hue-rotate(350deg) saturate(5);
 }
 
 .footer-bottom {
     text-align: center;
     padding-top: 2rem;
-    border-top: 1px solid #555;
+    border-top: 1px solid #444;
     font-size: 0.9rem;
     color: #ccc;
+}
+
+.footer-bottom p {
+    color: var(--secondary-light);
 }
 
 .footer-links {
@@ -1110,13 +1253,30 @@ footer {
     color: #ccc;
     text-decoration: none;
     margin: 0 1rem;
+    transition: var(--transition);
 }
 
 .footer-links a:hover {
-    color: var(--white);
+    color: var(--secondary-color);
 }
 
 /* ===== АДАПТИВНІСТЬ ===== */
+/* Планшет (від 769px до 1024px) */
+@media (max-width: 1024px) {
+    .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+    
+    .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+}
+
 /* Планшет (від 481px до 768px) */
 @media (max-width: 768px) {
     .menu-toggle {
@@ -1130,36 +1290,51 @@ footer {
         position: absolute;
         top: 70px;
         left: 0;
-        background-color: var(--white);
+        background: linear-gradient(135deg, var(--white) 0%, #f9f6e8 100%);
         padding: 2rem;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: var(--shadow-gold);
+        gap: 1.5rem;
+        border-bottom: 2px solid var(--secondary-color);
     }
     
     .nav-menu.active {
         display: flex;
+        animation: slideDown 0.3s ease;
+    }
+    
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
     
     .auth-buttons {
         flex-direction: column;
         width: 100%;
+        gap: 0.5rem;
     }
     
     .btn-login,
     .btn-register {
         text-align: center;
-    }
-    
-    .card-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-    }
-    
-    .footer-content {
-        grid-template-columns: repeat(2, 1fr);
+        width: 100%;
     }
     
     .hero h1 {
         font-size: 2rem;
+    }
+    
+    .hero p {
+        font-size: 1.1rem;
+    }
+    
+    .features h2 {
+        font-size: 1.8rem;
     }
 }
 
@@ -1172,6 +1347,11 @@ footer {
     
     .footer-content {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .hero {
+        padding: 3rem 0;
     }
     
     .hero h1 {
@@ -1182,8 +1362,16 @@ footer {
         font-size: 1rem;
     }
     
+    .features {
+        padding: 3rem 0;
+    }
+    
     .features h2 {
         font-size: 1.5rem;
+    }
+    
+    .cta {
+        padding: 3rem 0;
     }
     
     .cta h2 {
@@ -1195,11 +1383,16 @@ footer {
         flex-direction: column;
         gap: 0.5rem;
     }
+    
+    .footer-links a {
+        margin: 0;
+    }
 }
 
 /* Анімація бургер-іконки */
 .bar.active:nth-child(1) {
     transform: rotate(-45deg) translate(-5px, 6px);
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
 }
 
 .bar.active:nth-child(2) {
@@ -1208,6 +1401,31 @@ footer {
 
 .bar.active:nth-child(3) {
     transform: rotate(45deg) translate(-5px, -6px);
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+}
+
+/* ===== ДОДАТКОВІ ЕЛЕМЕНТИ ===== */
+.gold-text {
+    color: var(--secondary-color);
+}
+
+.emerald-text {
+    color: var(--primary-color);
+}
+
+.gradient-text {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.gold-border {
+    border: 2px solid var(--secondary-color);
+}
+
+.emerald-border {
+    border: 2px solid var(--primary-color);
 }
 ```
 
