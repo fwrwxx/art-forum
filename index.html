@@ -3,9 +3,163 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ArtHub - Платформа для художників</title>
+    <title>ArtHub - Платформа для художників | Лабораторні роботи</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/png" href="assets/icons/logo.png" />
+    <style>
+        /* Додаткові стилі для секції лабораторних */
+        .labs-section {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, #f9f6e8 0%, #ffffff 100%);
+        }
+        
+        .labs-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            position: relative;
+            padding-bottom: 1rem;
+            color: var(--text-dark);
+        }
+        
+        .labs-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 2px;
+        }
+        
+        .labs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .lab-card {
+            background: linear-gradient(135deg, var(--white) 0%, #fff9f0 100%);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            position: relative;
+        }
+        
+        .lab-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-gold);
+            border-color: var(--secondary-color);
+        }
+        
+        .lab-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            z-index: 1;
+        }
+        
+        .lab-card .card-content {
+            padding: 1.5rem;
+        }
+        
+        .lab-number {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .lab-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-dark);
+        }
+        
+        .lab-description {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        
+        .lab-meta {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        .lab-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .status-completed {
+            background: rgba(46, 139, 86, 0.15);
+            color: var(--primary-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+        }
+        
+        .status-pending {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--secondary-dark);
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+        }
+        
+        .btn-lab {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            transition: var(--transition);
+            margin-top: 0.5rem;
+        }
+        
+        .btn-lab:hover {
+            background: linear-gradient(135deg, var(--secondary-color), var(--secondary-dark));
+            transform: translateX(5px);
+        }
+        
+        .btn-lab-secondary {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            margin-left: 0.5rem;
+        }
+        
+        .btn-lab-secondary:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .labs-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -23,9 +177,8 @@
             
             <ul class="nav-menu" id="nav-menu">
                 <li><a href="index.html" class="active">Головна</a></li>
-                <li><a href="#">Форум</a></li>
-                <li><a href="#">Магазин</a></li>
-                <li><a href="#">Аукціон</a></li>
+                <li><a href="#labs">Лабораторні</a></li>
+                <li><a href="https://github.com/fwrwxx/art-forum" target="_blank">GitHub</a></li>
                 <li><a href="#">Про нас</a></li>
                 <li class="auth-buttons">
                     <a href="#" class="btn-login">Увійти</a>
@@ -78,6 +231,84 @@
             </div>
         </section>
 
+        <!-- Секція лабораторних робіт -->
+        <section id="labs" class="labs-section">
+            <div class="container">
+                <h2>📚 Лабораторні роботи</h2>
+                <p style="text-align: center; margin-bottom: 2rem; color: var(--text-light);">
+                    Звіти з дисципліни «WEB-орієнтовані технології. Backend розробки»
+                </p>
+                
+                <div class="labs-grid">
+                    <!-- Лабораторна робота №1 (Частина 1) -->
+                    <div class="lab-card">
+                        <div class="lab-badge">✅ Виконано</div>
+                        <div class="card-content">
+                            <div class="lab-number">Лабораторна робота №1</div>
+                            <h3 class="lab-title">Адаптивний веб-застосунок ArtHub</h3>
+                            <p class="lab-description">
+                                Створення платформи ArtHub: аналіз предметної області, проєктування діаграм, 
+                                адаптивна верстка з бургер-меню, CSS Grid, Flexbox та анімації.
+                            </p>
+                            <div class="lab-meta">
+                                <span>📅 2026</span>
+                                <span class="status-completed">✓ Завершено</span>
+                            </div>
+                            <a href="lab1.html" class="btn-lab">📖 Переглянути звіт →</a>
+                            <a href="lab1-part2/" class="btn-lab btn-lab-secondary">💻 Код API</a>
+                        </div>
+                    </div>
+
+                    <!-- Лабораторна робота №1 (Частина 2) -->
+                    <div class="lab-card">
+                        <div class="lab-badge">✅ Виконано</div>
+                        <div class="card-content">
+                            <div class="lab-number">Лабораторна робота №1 (Частина 2)</div>
+                            <h3 class="lab-title">Node.js + Express.js REST API</h3>
+                            <p class="lab-description">
+                                Встановлення та налаштування Node.js, створення HTTP-сервера з Express.js,
+                                реалізація REST API для керування студентами з повним CRUD функціоналом.
+                            </p>
+                            <div class="lab-meta">
+                                <span>📅 2026</span>
+                                <span class="status-completed">✓ Завершено</span>
+                            </div>
+                            <a href="lab1-part2.html" class="btn-lab">📖 Переглянути звіт →</a>
+                            <a href="lab1-part2/" class="btn-lab btn-lab-secondary">💻 Код API</a>
+                        </div>
+                    </div>
+
+                    <!-- Лабораторна робота №2 -->
+                    <div class="lab-card">
+                        <div class="lab-badge">✅ Виконано</div>
+                        <div class="card-content">
+                            <div class="lab-number">Лабораторна робота №2</div>
+                            <h3 class="lab-title">MySQL + Sequelize ORM</h3>
+                            <p class="lab-description">
+                                Створення бази даних MySQL, підключення Node.js до MySQL через Sequelize,
+                                створення моделей User та Post зі зв'язком One-to-Many, CRUD операції.
+                            </p>
+                            <div class="lab-meta">
+                                <span>📅 2026</span>
+                                <span class="status-completed">✓ Завершено</span>
+                            </div>
+                            <a href="lab2-report.html" class="btn-lab">📖 Переглянути звіт →</a>
+                            <a href="lab2/" class="btn-lab btn-lab-secondary">💻 Код API</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Інформація про репозиторій -->
+                <div style="text-align: center; margin-top: 3rem; padding: 1.5rem; background: linear-gradient(135deg, var(--bg-light), #fff); border-radius: var(--border-radius);">
+                    <h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">📦 Репозиторій проєкту</h3>
+                    <p>Всі лабораторні роботи доступні у відкритому репозиторії GitHub</p>
+                    <a href="https://github.com/fwrwxx/art-forum" target="_blank" class="btn-primary" style="margin-top: 1rem; display: inline-block;">
+                        🔗 Перейти на GitHub
+                    </a>
+                </div>
+            </div>
+        </section>
+
         <section class="cta">
             <div class="container">
                 <h2>Готові долучитися до спільноти?</h2>
@@ -93,23 +324,23 @@
                 <div class="footer-section">
                     <h4>ArtHub</h4>
                     <p>Форум, магазин та аукціон в одному місці.</p>
+                    <p style="margin-top: 0.5rem; font-size: 0.8rem;">Студентка: Штифлюк Ольга</p>
                 </div>
                 
                 <div class="footer-section">
                     <h4>Навігація</h4>
                     <ul>
                         <li><a href="index.html">Головна</a></li>
-                        <li><a href="#">Форум</a></li>
-                        <li><a href="#">Магазин</a></li>
-                        <li><a href="#">Аукціон</a></li>
-                        <li><a href="#">Про нас</a></li>
+                        <li><a href="#labs">Лабораторні роботи</a></li>
+                        <li><a href="https://github.com/fwrwxx/art-forum" target="_blank">GitHub</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
                     <h4>Контакти</h4>
                     <p>Email: info@arthub.com</p>
-                    <p>Адреса: м. Київ, вул. Хрещатик, 1</p>
+                    <p>GitHub: @fwrwxx</p>
+                    <p>📞 +380 (XX) XXX-XX-XX</p>
                 </div>
                 
                 <div class="footer-section">
@@ -120,6 +351,7 @@
                         <a href="#"><img src="assets/icons/twitter.png" alt="Twitter"></a>
                         <a href="#"><img src="assets/icons/pinterest.png" alt="Pinterest"></a>
                     </div>
+                    <p style="margin-top: 1rem; font-size: 0.8rem;">© 2026 ArtHub</p>
                 </div>
             </div>
             
@@ -134,5 +366,17 @@
     </footer>
 
     <script src="js/main.js"></script>
+    <script>
+        // Плавна навігація до секції лабораторних
+        document.querySelectorAll('a[href="#labs"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const labsSection = document.getElementById('labs');
+                if (labsSection) {
+                    labsSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
 </body>
 </html>

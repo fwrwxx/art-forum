@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtHub - Звіт ЛР №2 | MySQL + Sequelize (з результатами тестування)</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="assets/icons/logo.png" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2C3E50;
+            background: linear-gradient(135deg, #F5F5F5 0%, #f0f3e8 100%);
+        }
+        
+        .report-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .report-section {
+            margin-bottom: 2.5rem;
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .report-section h2 {
+            color: #2E8B57;
+            border-left: 4px solid #D4AF37;
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .report-section h3 {
+            color: #2C3E50;
+            margin: 1.5rem 0 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .report-section h4 {
+            color: #2E8B57;
+            margin: 1rem 0 0.5rem;
+            font-size: 1.1rem;
+        }
+        
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .test-result {
+            background: #f8f9fa;
+            border-left: 4px solid #2E8B57;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+        
+        .test-result h4 {
+            color: #2E8B57;
+            margin-top: 0;
+        }
+        
+        .test-result pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.8rem;
+        }
+        
+        .success {
+            color: #2E8B57;
+            font-weight: bold;
+        }
+        
+        .endpoint-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .endpoint-item {
+            background: #f5f5f5;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+        
+        .endpoint-item .method {
+            color: #2E8B57;
+            font-weight: bold;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #2E8B57, #1f5f3a);
+            color: white;
+            padding: 1rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .stat-card .label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #2E8B57, #1f5f3a);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .status-success {
+            background: #2E8B57;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .report-section {
+                padding: 1rem;
+            }
+            .endpoint-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar container">
+            <div class="logo">
+                <img src="assets/icons/logo.png" alt="ArtHub Logo">
+                <span>ArtHub</span>
+            </div>
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html">Головна</a></li>
+                <li><a href="lab1.html">ЛР №1</a></li>
+                <li><a href="lab2-report.html" class="active">ЛР №2</a></li>
+                <li><a href="https://github.com/fwrwxx/art-forum" target="_blank">GitHub</a></li>
+                <li class="auth-buttons">
+                    <a href="#" class="btn-login">Увійти</a>
+                    <a href="#" class="btn-register">Реєстрація</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="report-container">
+            <!-- Заголовок -->
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h1>🗄️ Лабораторна робота №2</h1>
+                <h2 style="color: #D4AF37;">Створення бази даних у MySQL. Підключення Node.js до MySQL. Робота з ORM Sequelize</h2>
+                <p><strong>Дисципліна:</strong> WEB-орієнтовані технології. Backend розробки</p>
+                <p><strong>Студентка:</strong> Штифлюк Ольга Володимирівна</p>
+                <p><strong>Дата виконання:</strong> 25 березня 2026 року</p>
+            </div>
+
+            <!-- Мета роботи -->
+            <div class="report-section">
+                <h2>🎯 Мета роботи</h2>
+                <ul>
+                    <li>Створити базу даних MySQL для веб-застосунку ArtHub</li>
+                    <li>Підключити Node.js до MySQL за допомогою драйвера mysql2</li>
+                    <li>Вивчити роботу з ORM Sequelize</li>
+                    <li>Створити моделі User та Post зі зв'язком One-to-Many</li>
+                    <li>Реалізувати CRUD операції через REST API</li>
+                </ul>
+            </div>
+
+            <!-- Моделі даних -->
+            <div class="report-section">
+                <h2>📊 Моделі даних</h2>
+                
+                <h3>Модель User (користувач)</h3>
+                <div class="code-block">
+                    <pre>const User = sequelize.define('User', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    name: { type: DataTypes.STRING(100), allowNull: false },
+    email: { type: DataTypes.STRING(100), allowNull: false, unique: true },
+    role: { type: DataTypes.ENUM('artist', 'collector', 'admin'), defaultValue: 'artist' },
+    bio: { type: DataTypes.TEXT, allowNull: true },
+    isActive: { type: DataTypes.BOOLEAN, defaultValue: true }
+});</pre>
+                </div>
+
+                <h3>Модель Post (пост)</h3>
+                <div class="code-block">
+                    <pre>const Post = sequelize.define('Post', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    title: { type: DataTypes.STRING(200), allowNull: false },
+    content: { type: DataTypes.TEXT, allowNull: false },
+    status: { type: DataTypes.ENUM('draft', 'published', 'archived'), defaultValue: 'draft' },
+    views: { type: DataTypes.INTEGER, defaultValue: 0 },
+    userId: { type: DataTypes.INTEGER, allowNull: false }
+});</pre>
+                </div>
+
+                <h3>Зв'язок One-to-Many</h3>
+                <div class="code-block">
+                    <pre>User.hasMany(Post, { foreignKey: 'userId', onDelete: 'CASCADE' });
+Post.belongsTo(User, { foreignKey: 'userId' });</pre>
+                </div>
+            </div>
+
+            <!-- Результати тестування API -->
+            <div class="report-section">
+                <h2>Результати тестування API</h2>
+                
+                <h3>📋 Користувачі (Users)</h3>
+                
+                <div class="test-result">
+                    <h4>GET /api/users - отримати всіх користувачів</h4>
+                    <pre>curl http://localhost:3000/api/users</pre>
+                    <pre>{
+  "success": true,
+  "count": 4,
+  "data": [
+    {
+      "id": 1,
+      "name": "Ivan Petrenko",
+      "email": "ivan@example.com",
+      "role": "artist",
+      "bio": "Illustrator artist",
+      "Posts": [
+        {"id": 1, "title": "Introduction to Digital Painting", "status": "published"},
+        {"id": 2, "title": "How to Choose a Graphics Tablet", "status": "published"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Maria Shevchenko",
+      "email": "maria@example.com",
+      "role": "artist",
+      "bio": "Digital artist",
+      "Posts": [{"id": 3, "title": "My Creative Journey", "status": "published"}]
+    },
+    {
+      "id": 3,
+      "name": "Oleksiy Kovalenko",
+      "email": "oleksiy@example.com",
+      "role": "collector",
+      "bio": "Art collector",
+      "Posts": []
+    },
+    {
+      "id": 4,
+      "name": "Anna Melnyk",
+      "email": "anna@example.com",
+      "role": "admin",
+      "bio": "Platform administrator",
+      "Posts": []
+    }
+  ]
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>GET /api/users/1 - отримати користувача за ID</h4>
+                    <pre>curl http://localhost:3000/api/users/1</pre>
+                    <pre>{
+  "success": true,
+  "data": {
+    "id": 1,
+    "name": "Ivan Petrenko",
+    "email": "ivan@example.com",
+    "role": "artist",
+    "bio": "Illustrator artist",
+    "Posts": [
+      {"id": 1, "title": "Introduction to Digital Painting", "content": "In this article...", "status": "published"},
+      {"id": 2, "title": "How to Choose a Graphics Tablet", "content": "Tips for beginners...", "status": "published"}
+    ]
+  }
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>POST /api/users - створити нового користувача</h4>
+                    <pre>curl -X POST http://localhost:3000/api/users \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Petro Ivanov","email":"petro@example.com","role":"artist","bio":"Young artist"}'</pre>
+                    <pre>{
+  "success": true,
+  "data": {
+    "id": 6,
+    "name": "Petro Ivanov",
+    "email": "petro@example.com",
+    "role": "artist",
+    "bio": "Young artist",
+    "isActive": true
+  }
+}</pre>
+                </div>
+
+                <h3>📝 Пости (Posts)</h3>
+
+                <div class="test-result">
+                    <h4>GET /api/posts - отримати всі пости</h4>
+                    <pre>curl http://localhost:3000/api/posts</pre>
+                    <pre>{
+  "success": true,
+  "count": 4,
+  "data": [
+    {
+      "id": 1,
+      "title": "Introduction to Digital Painting",
+      "content": "In this article I will talk about the basics...",
+      "status": "published",
+      "views": 2,
+      "userId": 1,
+      "User": {"id": 1, "name": "Ivan Petrenko", "email": "ivan@example.com"}
+    },
+    {
+      "id": 5,
+      "title": "My First Post",
+      "content": "Hello from Node.js!",
+      "status": "published",
+      "views": 0,
+      "userId": 1,
+      "User": {"id": 1, "name": "Ivan Petrenko", "email": "ivan@example.com"}
+    }
+  ]
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>POST /api/posts - створити новий пост</h4>
+                    <pre>curl -X POST http://localhost:3000/api/posts \
+  -H "Content-Type: application/json" \
+  -d '{"title":"My First Post","content":"Hello from Node.js!","status":"published","userId":1}'</pre>
+                    <pre>{
+  "success": true,
+  "data": {
+    "id": 5,
+    "title": "My First Post",
+    "content": "Hello from Node.js!",
+    "status": "published",
+    "views": 0,
+    "userId": 1
+  }
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>GET /api/posts/user/1 - отримати пости користувача</h4>
+                    <pre>curl http://localhost:3000/api/posts/user/1</pre>
+                    <pre>{
+  "success": true,
+  "user": {"id": 1, "name": "Ivan Petrenko"},
+  "count": 3,
+  "data": [
+    {"id": 1, "title": "Introduction to Digital Painting", "views": 2},
+    {"id": 2, "title": "How to Choose a Graphics Tablet", "views": 0},
+    {"id": 5, "title": "My First Post", "views": 0}
+  ]
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>GET /api/posts?status=published - фільтрація за статусом</h4>
+                    <pre>curl "http://localhost:3000/api/posts?status=published"</pre>
+                    <pre>{
+  "success": true,
+  "count": 4,
+  "data": [ ... всі опубліковані пости ... ]
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>GET /api/posts?userId=1 - фільтрація за користувачем</h4>
+                    <pre>curl "http://localhost:3000/api/posts?userId=1"</pre>
+                    <pre>{
+  "success": true,
+  "count": 3,
+  "data": [ ... пости користувача з ID=1 ... ]
+}</pre>
+                </div>
+            </div>
+
+            <!-- Статистика -->
+            <div class="report-section">
+                <h2>📊 Статистика системи</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="number">4</div>
+                        <div class="label">Всього користувачів</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">2</div>
+                        <div class="label">Художники (artists)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">1</div>
+                        <div class="label">Колекціонери</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">1</div>
+                        <div class="label">Адміністратори</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">4</div>
+                        <div class="label">Всього постів</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">4</div>
+                        <div class="label">Опубліковано постів</div>
+                    </div>
+                </div>
+
+                <h3>Розподіл за ролями</h3>
+                <table>
+                    <thead>
+                        <tr><th>Роль</th><th>Кількість</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>artist</td><td>2</td></tr>
+                        <tr><td>collector</td><td>1</td></tr>
+                        <tr><td>admin</td><td>1</td></tr>
+                    </tbody>
+                </table>
+
+                <h3>Топ автор за кількістю постів</h3>
+                <table>
+                    <thead>
+                        <tr><th>Автор</th><th>Кількість постів</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Ivan Petrenko</td><td>3</td></tr>
+                        <tr><td>Maria Shevchenko</td><td>1</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Список всіх ендпоінтів -->
+            <div class="report-section">
+                <h2>🔗 Доступні API ендпоінти</h2>
+                
+                <h3>Користувачі</h3>
+                <div class="endpoint-list">
+                    <div class="endpoint-item"><span class="method">GET</span> /api/users - всі користувачі</div>
+                    <div class="endpoint-item"><span class="method">GET</span> /api/users/:id - користувач за ID</div>
+                    <div class="endpoint-item"><span class="method">POST</span> /api/users - створити користувача</div>
+                    <div class="endpoint-item"><span class="method">PUT</span> /api/users/:id - оновити користувача</div>
+                    <div class="endpoint-item"><span class="method">DELETE</span> /api/users/:id - видалити користувача</div>
+                </div>
+                
+                <h3>Пости</h3>
+                <div class="endpoint-list">
+                    <div class="endpoint-item"><span class="method">GET</span> /api/posts - всі пости</div>
+                    <div class="endpoint-item"><span class="method">GET</span> /api/posts/:id - пост за ID</div>
+                    <div class="endpoint-item"><span class="method">GET</span> /api/posts/user/:userId - пости користувача</div>
+                    <div class="endpoint-item"><span class="method">POST</span> /api/posts - створити пост</div>
+                    <div class="endpoint-item"><span class="method">PUT</span> /api/posts/:id - оновити пост</div>
+                    <div class="endpoint-item"><span class="method">DELETE</span> /api/posts/:id - видалити пост</div>
+                </div>
+                
+                <h3>Фільтрація</h3>
+                <div class="endpoint-list">
+                    <div class="endpoint-item"><span class="method">GET</span> /api/posts?status=published - за статусом</div>
+                    <div class="endpoint-item"><span class="method">GET</span> /api/posts?userId=1 - за користувачем</div>
+                    <div class="endpoint-item"><span class="method">GET</span> /api/posts?userId=1&status=published - комбінована</div>
+                </div>
+                
+                <h3>Статистика</h3>
+                <div class="endpoint-list">
+                    <div class="endpoint-item"><span class="method">GET</span> /api/stats - статистика системи</div>
+                </div>
+            </div>
+
+            <!-- Висновки -->
+            <div class="report-section">
+                <h2>📝 Висновки</h2>
+                <p>У ході виконання лабораторної роботи №2 було:</p>
+                <ul>
+                    <li>Створено базу даних MySQL <code>web_backend_lab</code> з таблицями <code>users</code> та <code>posts</code></li>
+                    <li>Налаштовано підключення Node.js до MySQL через драйвер <code>mysql2</code></li>
+                    <li>Вивчено та застосовано ORM <code>Sequelize</code> для роботи з базою даних</li>
+                    <li>Створено моделі <code>User</code> та <code>Post</code> з валідацією даних</li>
+                    <li>Реалізовано зв'язок One-to-Many між користувачами та постами</li>
+                    <li>Розроблено повноцінне REST API з CRUD операціями для обох сутностей</li>
+                    <li>Додано фільтрацію постів за статусом та автором</li>
+                    <li>Реалізовано ендпоінт для отримання статистики системи</li>
+                    <li>Проведено тестування всіх ендпоінтів через cURL</li>
+                </ul>
+                
+                <h3>Отримані навички:</h3>
+                <ul>
+                    <li>Проектування реляційних баз даних</li>
+                    <li>Робота з MySQL через Node.js</li>
+                    <li>Використання ORM Sequelize</li>
+                    <li>Створення моделей та зв'язків</li>
+                    <li>Розробка REST API з CRUD операціями</li>
+                    <li>Фільтрація та агрегація даних</li>
+                </ul>
+            </div>
+
+            <!-- Посилання -->
+            <div class="report-section">
+                <h2>🔗 Посилання</h2>
+                <ul>
+                    <li><strong>GitHub репозиторій:</strong> <a href="https://github.com/fwrwxx/art-forum" target="_blank">https://github.com/fwrwxx/art-forum</a></li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>ArtHub</h4>
+                    <p>Форум, магазин та аукціон в одному місці.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Навігація</h4>
+                    <ul>
+                        <li><a href="index.html">Головна</a></li>
+                        <li><a href="lab1.html">ЛР №1</a></li>
+                        <li><a href="lab2-report.html">ЛР №2</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакти</h4>
+                    <p>Email: shtyfliuko@gmail.com</p>
+                    <p>Студентка: Штифлюк Ольга</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Соціальні мережі</h4>
+                    <div class="social-links">
+                        <a href="#"><img src="assets/icons/facebook.png" alt="Facebook"></a>
+                        <a href="#"><img src="assets/icons/instagram.png" alt="Instagram"></a>
+                        <a href="#"><img src="assets/icons/twitter.png" alt="Twitter"></a>
+                        <a href="#"><img src="assets/icons/pinterest.png" alt="Pinterest"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ArtHub. Всі права захищені.</p>
+                <p>Штифлюк Ольга Володимирівна</p>
+            </div>
+        </div>
+    </footer>
+    <script src="js/main.js"></script>
+</body>
+</html>

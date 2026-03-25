@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtHub - Звіт ЛР №1 (Частина 2) | Node.js + Express.js</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="assets/icons/logo.png" />
+    <style>
+        .report-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        .report-section {
+            margin-bottom: 3rem;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        .report-section h2 {
+            color: var(--primary-color);
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .report-section h3 {
+            color: var(--text-dark);
+            margin: 1.5rem 0 1rem;
+        }
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .task-card {
+            background: linear-gradient(135deg, #f9f6e8, var(--white));
+            border-left: 4px solid var(--secondary-color);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: var(--border-radius);
+        }
+        .task-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .http-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .method-card {
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+        .method-card .method {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+        }
+        .question-list {
+            list-style: none;
+            padding: 0;
+        }
+        .question-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #ddd;
+        }
+        @media (max-width: 768px) {
+            .report-section {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar container">
+            <div class="logo">
+                <img src="assets/icons/logo.png" alt="ArtHub Logo">
+                <span>ArtHub</span>
+            </div>
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html">Головна</a></li>
+                <li><a href="lab1.html">ЛР №1</a></li>
+                <li><a href="lab2.html">ЛР №2</a></li>
+                <li><a href="https://github.com/fwrwxx/art-forum" target="_blank">GitHub</a></li>
+                <li class="auth-buttons">
+                    <a href="#" class="btn-login">Увійти</a>
+                    <a href="#" class="btn-register">Реєстрація</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="report-container">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h1>🚀 Встановлення та налаштування середовища Node.js</h1>
+                <h2 style="color: var(--secondary-color);">Основи роботи з Express.js</h2>
+                <p><strong>Лабораторна робота №1 (Частина 2)</strong></p>
+                <p style="margin-bottom: 10px;">📅 2025 | 👩‍🎨 Штифлюк Ольга Володимирівна</p>
+                <a href="lab1.html" class="btn-login">Частина 1</a>
+            </div>
+
+            <!-- Мета роботи -->
+            <div class="report-section">
+                <h2>🎯 Мета роботи</h2>
+                <ul>
+                    <li>Ознайомитися з принципами роботи HTTP-серверів</li>
+                    <li>Вивчити основи створення веб-серверів на Node.js</li>
+                    <li>Ознайомитися з архітектурою REST API</li>
+                    <li>Навчитися створювати маршрути (routes) для обробки HTTP-запитів</li>
+                </ul>
+            </div>
+
+            <!-- Теоретичні відомості -->
+            <div class="report-section">
+                <h2>📚 Теоретичні відомості</h2>
+                
+                <h3>1. HTTP-сервер</h3>
+                <p>HTTP-сервер — це програмне забезпечення, яке обробляє HTTP-запити від клієнтів (браузерів або інших програм) та повертає відповіді.</p>
+                <p><strong>Основні функції HTTP-сервера:</strong></p>
+                <ul>
+                    <li>прийом запитів від клієнтів</li>
+                    <li>обробка запитів</li>
+                    <li>формування відповіді</li>
+                    <li>передача результату клієнту</li>
+                </ul>
+
+                <h3>2. Node.js</h3>
+                <p>Node.js — це середовище виконання JavaScript на стороні сервера.</p>
+                <p><strong>Переваги Node.js:</strong></p>
+                <ul>
+                    <li>асинхронність</li>
+                    <li>висока продуктивність</li>
+                    <li>велика кількість бібліотек</li>
+                    <li>можливість створення REST API</li>
+                </ul>
+
+                <h3>3. Express.js</h3>
+                <p>Express.js — це фреймворк для Node.js, який спрощує створення серверних застосунків.</p>
+                <p><strong>Основні можливості:</strong></p>
+                <ul>
+                    <li>створення маршрутів</li>
+                    <li>обробка HTTP-запитів</li>
+                    <li>middleware</li>
+                    <li>створення REST API</li>
+                </ul>
+
+                <h3>4. REST API</h3>
+                <p>REST (Representational State Transfer) — це архітектурний стиль для створення веб-сервісів.</p>
+                <p><strong>Основні принципи REST:</strong></p>
+                <ul>
+                    <li>використання HTTP-методів</li>
+                    <li>клієнт-серверна архітектура</li>
+                    <li>відсутність стану (stateless)</li>
+                    <li>використання стандартних форматів даних</li>
+                </ul>
+
+                <h3>5. Основні HTTP-методи</h3>
+                <div class="http-methods">
+                    <div class="method-card"><span class="method">GET</span><br>отримання даних</div>
+                    <div class="method-card"><span class="method">POST</span><br>створення нового ресурсу</div>
+                    <div class="method-card"><span class="method">PUT</span><br>оновлення ресурсу</div>
+                    <div class="method-card"><span class="method">DELETE</span><br>видалення ресурсу</div>
+                </div>
+            </div>
+
+            <!-- Методичні вказівки -->
+            <div class="report-section">
+                <h2>🛠️ Методичні вказівки до виконання</h2>
+                
+                <div class="code-block">
+                    <pre># 1. Перевірка встановлення Node.js
+node -v
+npm -v
+
+# 2. Створення нової папки проєкту
+mkdir lab1-rest-api
+cd lab1-rest-api
+
+# 3. Ініціалізація Node.js проєкту
+npm init -y
+
+# 4. Встановлення Express.js
+npm install express
+
+# 5. Створення файлу server.js
+
+# 6. Запуск сервера
+node server.js</pre>
+                </div>
+
+                <h3>Простий HTTP-сервер на Express</h3>
+                <div class="code-block">
+                    <pre>const express = require("express");
+const app = express();
+
+app.get("/", (req, res) => {
+    res.send("Hello World");
+});
+
+app.listen(3000, () => {
+    console.log("Server started on port 3000");
+});</pre>
+                </div>
+            </div>
+
+            <!-- Практичні завдання -->
+            <div class="report-section">
+                <h2>📝 Практичні завдання</h2>
+
+                <div class="task-card">
+                    <h4>📌 Завдання 1</h4>
+                    <p>Створити Node.js проєкт та встановити бібліотеку Express.js</p>
+                    <div class="code-block">
+                        <pre>npm init -y
+npm install express</pre>
+                    </div>
+                </div>
+
+                <div class="task-card">
+                    <h4>📌 Завдання 2</h4>
+                    <p>Створити HTTP-сервер, який повертає повідомлення: <code>Hello from Node.js server</code></p>
+                    <div class="code-block">
+                        <pre>const express = require('express');
+const app = express();
+
+app.get('/', (req, res) => {
+    res.send('Hello from Node.js server');
+});
+
+app.listen(3000, () => {
+    console.log('Server running on port 3000');
+});</pre>
+                    </div>
+                </div>
+
+                <div class="task-card">
+                    <h4>📌 Завдання 3</h4>
+                    <p>Створити маршрут <code>GET /students</code>, який повертає список студентів у форматі JSON.</p>
+                    <div class="code-block">
+                        <pre>const students = [
+    { id: 1, name: 'Іван Петренко', group: 'ІП-01' },
+    { id: 2, name: 'Марія Шевченко', group: 'ІП-01' },
+    { id: 3, name: 'Олексій Коваленко', group: 'ІП-02' }
+];
+
+app.get('/students', (req, res) => {
+    res.json(students);
+});</pre>
+                    </div>
+                </div>
+
+                <div class="task-card">
+                    <h4>📌 Завдання 4</h4>
+                    <p>Створити маршрут <code>POST /students</code> для додавання нового студента.</p>
+                    <div class="code-block">
+                        <pre>app.use(express.json());
+
+app.post('/students', (req, res) => {
+    const newStudent = {
+        id: students.length + 1,
+        name: req.body.name,
+        group: req.body.group
+    };
+    students.push(newStudent);
+    res.status(201).json(newStudent);
+});</pre>
+                    </div>
+                </div>
+
+                <div class="task-card">
+                    <h4>📌 Завдання 5</h4>
+                    <p>Створити маршрути <code>PUT /students/:id</code> та <code>DELETE /students/:id</code> для оновлення та видалення студента.</p>
+                    <div class="code-block">
+                        <pre>// Оновлення студента
+app.put('/students/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const student = students.find(s => s.id === id);
+    
+    if (student) {
+        student.name = req.body.name || student.name;
+        student.group = req.body.group || student.group;
+        res.json(student);
+    } else {
+        res.status(404).json({ error: 'Student not found' });
+    }
+});
+
+// Видалення студента
+app.delete('/students/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const index = students.findIndex(s => s.id === id);
+    
+    if (index !== -1) {
+        students.splice(index, 1);
+        res.status(204).send();
+    } else {
+        res.status(404).json({ error: 'Student not found' });
+    }
+});</pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Повний код сервера -->
+            <div class="report-section">
+                <h2>💻 Повний код сервера (server.js)</h2>
+                <div class="code-block">
+                    <pre>const express = require('express');
+const app = express();
+
+app.use(express.json());
+
+let students = [
+    { id: 1, name: 'Іван Петренко', group: 'ІП-01' },
+    { id: 2, name: 'Марія Шевченко', group: 'ІП-01' },
+    { id: 3, name: 'Олексій Коваленко', group: 'ІП-02' }
+];
+
+// GET /students - отримати всіх студентів
+app.get('/students', (req, res) => {
+    res.json(students);
+});
+
+// GET /students/:id - отримати студента за ID
+app.get('/students/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const student = students.find(s => s.id === id);
+    
+    if (student) {
+        res.json(student);
+    } else {
+        res.status(404).json({ error: 'Student not found' });
+    }
+});
+
+// POST /students - додати нового студента
+app.post('/students', (req, res) => {
+    const newStudent = {
+        id: students.length + 1,
+        name: req.body.name,
+        group: req.body.group
+    };
+    students.push(newStudent);
+    res.status(201).json(newStudent);
+});
+
+// PUT /students/:id - оновити студента
+app.put('/students/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const student = students.find(s => s.id === id);
+    
+    if (student) {
+        student.name = req.body.name || student.name;
+        student.group = req.body.group || student.group;
+        res.json(student);
+    } else {
+        res.status(404).json({ error: 'Student not found' });
+    }
+});
+
+// DELETE /students/:id - видалити студента
+app.delete('/students/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const index = students.findIndex(s => s.id === id);
+    
+    if (index !== -1) {
+        students.splice(index, 1);
+        res.status(204).send();
+    } else {
+        res.status(404).json({ error: 'Student not found' });
+    }
+});
+
+const PORT = 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});</pre>
+                </div>
+            </div>
+
+            <!-- Висновки -->
+            <div class="report-section">
+                <h2>📝 Висновки</h2>
+                <p>У ході виконання 2-ї частини лабораторної роботи №1 було:</p>
+                <ul>
+                    <li>✅ Вивчено принципи роботи HTTP-серверів</li>
+                    <li>✅ Створено веб-сервер на Node.js з використанням Express.js</li>
+                    <li>✅ Реалізовано повноцінне REST API для роботи зі студентами</li>
+                    <li>✅ Освоєно роботу з HTTP-методами (GET, POST, PUT, DELETE)</li>
+                    <li>✅ Набуто навичок створення маршрутів та обробки запитів</li>
+                </ul>
+                <br>
+                <p><strong>Отримані навички:</strong> створення серверних застосунків на Node.js, робота з Express.js, проєктування REST API, обробка HTTP-запитів.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>ArtHub</h4>
+                    <p>Форум, магазин та аукціон в одному місці.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Навігація</h4>
+                    <ul>
+                        <li><a href="index.html">Лабораторні роботи</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакти</h4>
+                    <p>Email: shtyfliuko@gmail.com</p>
+                    <p>Студентка: Штифлюк Ольга</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Соціальні мережі</h4>
+                    <div class="social-links">
+                        <a href="#"><img src="assets/icons/facebook.png" alt="Facebook"></a>
+                        <a href="#"><img src="assets/icons/instagram.png" alt="Instagram"></a>
+                        <a href="#"><img src="assets/icons/twitter.png" alt="Twitter"></a>
+                        <a href="#"><img src="assets/icons/pinterest.png" alt="Pinterest"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 ArtHub. Всі права захищені.</p>
+                <p>Штифлюк Ольга Володимирівна</p>
+            </div>
+        </div>
+    </footer>
+    <script src="js/main.js"></script>
+</body>
+</html>

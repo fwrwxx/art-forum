@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtHub - Звіт ЛР №1</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="assets/icons/logo.png" />
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { primaryColor: '#2E8B57', primaryBorderColor: '#D4AF37', primaryTextColor: '#2C3E50', lineColor: '#D4AF37', secondaryColor: '#F5F5F5', tertiaryColor: '#FFFFFF' } });
+    </script>
+    <style>
+        /* Додаткові стилі для звіту */
+        .report-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        .report-section {
+            margin-bottom: 3rem;
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(212, 175, 55, 0.1);
+        }
+        .report-section h2 {
+            color: var(--primary-color);
+            border-left: 4px solid var(--secondary-color);
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .report-section h3 {
+            color: var(--text-dark);
+            margin: 1.5rem 0 1rem;
+        }
+        .report-section h4 {
+            color: var(--primary-dark);
+            margin: 1rem 0 0.5rem;
+        }
+        .requirement-table, .business-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        .requirement-table th, .business-table th,
+        .requirement-table td, .business-table td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .requirement-table th, .business-table th {
+            background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
+            color: white;
+        }
+        .requirement-table tr:nth-child(even), .business-table tr:nth-child(even) {
+            background-color: var(--bg-light);
+        }
+        .mermaid {
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        .image-placeholder {
+            background: linear-gradient(135deg, #e0e0e0, #f0f0f0);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            text-align: center;
+            margin: 1rem 0;
+            border: 2px dashed var(--secondary-color);
+            color: var(--text-light);
+        }
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            overflow-x: auto;
+            font-family: monospace;
+            margin: 1rem 0;
+        }
+        .file-structure {
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            font-family: monospace;
+        }
+        .useful-links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .useful-link-card {
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            border-left: 3px solid var(--secondary-color);
+        }
+        .useful-link-card a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .useful-link-card a:hover {
+            color: var(--secondary-color);
+        }
+        @media (max-width: 768px) {
+            .report-section {
+                padding: 1rem;
+            }
+            .requirement-table, .business-table {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar container">
+            <div class="logo">
+                <img src="assets/icons/logo.png" alt="ArtHub Logo">
+                <span>ArtHub</span>
+            </div>
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html">Лабораторні</a></li>
+                <li><a href="lab1.html" class="active">ЛР №1</a></li>
+                <li><a href="https://github.com/fwrwxx/art-forum" target="_blank">GitHub</a></li>
+                <li class="auth-buttons">
+                    <a href="#" class="btn-login">Увійти</a>
+                    <a href="#" class="btn-register">Реєстрація</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="report-container">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h1>🎨 ArtHub - Платформа для художників</h1>
+                <p><strong>Лабораторна робота №1</strong> з дисципліни «WEB-орієнтовані технології. Backend розробки»</p>
+                <p><strong>Тема:</strong> ВИБІР ПРЕДМЕТНОЇ ОБЛАСТІ. АНАЛІЗ, МОДЕЛЮВАННЯ ТА РОЗРОБЛЕННЯ АДАПТИВНОГО WEB-ЗАСТОСУНКУ</p>
+                <p style="margin-bottom: 10px;">📅 2026 | 👩‍🎨 Штифлюк Ольга Володимирівна</p>
+                <a href="lab1-part2.html" class="btn-login">Частина 2</a>
+            </div>
+
+            <!-- Аналіз та моделювання -->
+            <div class="report-section">
+                <h2>📊 АНАЛІЗ ТА МОДЕЛЮВАННЯ СИСТЕМИ</h2>
+                <h3>Актуальність теми</h3>
+                <p>У сучасному цифровому просторі художники змушені використовувати різні платформи для різних потреб. Це створює фрагментацію аудиторії та складність просування власного бренду.</p>
+                <p><strong>Вирішення проблеми:</strong> створення єдиної платформи ArtHub, яка об'єднує форум, магазин та аукціон.</p>
+                
+                <h3>Мета роботи</h3>
+                <p>Розробка адаптивного веб-застосунку для художників ArtHub, що об'єднує функціонал тематичного форуму, онлайн-магазину та аукціону мистецьких робіт.</p>
+                
+                <h3>Бізнес-логіка</h3>
+                <table class="business-table">
+                    <thead>
+                        <tr><th>Категорія</th><th>Правила</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Реєстрація та профілі</strong></td><td>• Користувач може зареєструватися як "Художник" або "Колекціонер/Покупець"<br>• Для публікації лоту на аукціоні художник повинен мати підтверджений email</td></tr>
+                        <tr><td><strong>Форум</strong></td><td>• Нова тема створюється тільки зареєстрованим користувачем<br>• Редагування повідомлення протягом 15 хвилин</td></tr>
+                        <tr><td><strong>Магазин</strong></td><td>• Ціна на товар вказується обов'язково<br>• При купівлі товар автоматично зникає з вітрини</td></tr>
+                        <tr><td><strong>Аукціон</strong></td><td>• Торги тривають 7 днів<br>• Ставка збільшується мінімум на 5%<br>• Автоматичне завершення при відсутності ставок 24 години</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Функціональні вимоги -->
+            <div class="report-section">
+                <h2>⚙️ ФУНКЦІОНАЛЬНІ ТА НЕФУНКЦІОНАЛЬНІ ВИМОГИ</h2>
+                <h3>Функціональні вимоги (FR)</h3>
+                <table class="requirement-table">
+                    <thead><tr><th>ID</th><th>Вимога</th><th>Опис</th></tr></thead>
+                    <tbody>
+                        <tr><td>FR-1</td><td>Реєстрація та авторизація</td><td>Система повинна дозволяти користувачу реєструватися та авторизуватися</td></tr>
+                        <tr><td>FR-2</td><td>Управління форумом</td><td>Можливість створювати, редагувати та видаляти теми/повідомлення</td></tr>
+                        <tr><td>FR-3</td><td>Перегляд магазину</td><td>Відображення списку товарів з фільтрацією за категоріями</td></tr>
+                        <tr><td>FR-4</td><td>Додавання товарів</td><td>Художник може додавати нові роботи до магазину</td></tr>
+                        <tr><td>FR-5</td><td>Участь в аукціоні</td><td>Перегляд активних лотів та можливість робити ставки</td></tr>
+                        <tr><td>FR-6</td><td>Сповіщення</td><td>Повідомлення користувача про виграний лот</td></tr>
+                        <tr><td>FR-7</td><td>Адаптивна навігація</td><td>Адаптивне меню, що трансформується в "бургер" на мобільних пристроях</td></tr>
+                    </tbody>
+                </table>
+                
+                <h3>Нефункціональні вимоги (NFR)</h3>
+                <table class="requirement-table">
+                    <thead><tr><th>ID</th><th>Вимога</th><th>Опис</th></tr></thead>
+                    <tbody>
+                        <tr><td>NFR-1</td><td>Адаптивність</td><td>Коректне відображення від 320px до 1920px</td></tr>
+                        <tr><td>NFR-2</td><td>Продуктивність</td><td>Час завантаження не більше 3 секунд</td></tr>
+                        <tr><td>NFR-3</td><td>Зручність</td><td>Інтуїтивно зрозумілий інтерфейс</td></tr>
+                        <tr><td>NFR-4</td><td>Сумісність</td><td>Chrome, Firefox, Safari, Edge</td></tr>
+                        <tr><td>NFR-5</td><td>Структура коду</td><td>Логічно структуровані папки (css, js, assets)</td></tr>
+                        <tr><td>NFR-6</td><td>Семантична верстка</td><td>Використання семантичних тегів HTML5</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Діаграми -->
+            <div class="report-section">
+                <h2>📐 ДІАГРАМИ</h2>
+                <h3>Use-Case діаграма</h3>
+                <div class="mermaid">
+                    graph TB
+                        Guest(("Гість"))
+                        Artist(("Художник"))
+                        Buyer(("Покупець"))
+                        Admin(("Адміністратор"))
+                        
+                        Guest --> Artist
+                        Artist --> Buyer
+                        Buyer --> Admin
+                        
+                        ViewForum["Переглядати форум"]
+                        ViewShop["Переглядати магазин"]
+                        ViewAuction["Переглядати аукціон"]
+                        Register["Зареєструватися"]
+                        Login["Увійти"]
+                        CreateTopic["Створити тему"]
+                        ReplyTopic["Відповісти в темі"]
+                        AddProduct["Додати товар"]
+                        CreateLot["Створити лот"]
+                        BuyProduct["Купити товар"]
+                        MakeBid["Зробити ставку"]
+                        ManageUsers["Керувати користувачами"]
+                        
+                        Guest --> ViewForum
+                        Guest --> ViewShop
+                        Guest --> ViewAuction
+                        Guest --> Register
+                        Guest --> Login
+                        
+                        Artist --> CreateTopic
+                        Artist --> ReplyTopic
+                        Artist --> AddProduct
+                        Artist --> CreateLot
+                        
+                        Buyer --> BuyProduct
+                        Buyer --> MakeBid
+                        
+                        Admin --> ManageUsers
+                </div>
+                
+                <h3>ER-діаграма</h3>
+                <div class="mermaid">
+                    erDiagram
+                        USER ||--o{ FORUM_TOPIC : creates
+                        USER ||--o{ FORUM_POST : writes
+                        USER ||--o{ PRODUCT : sells
+                        USER ||--o{ AUCTION_LOT : creates
+                        USER ||--o{ BID : places
+                        FORUM_TOPIC ||--o{ FORUM_POST : contains
+                        AUCTION_LOT ||--o{ BID : receives
+                        
+                        USER {
+                            int id PK
+                            string username
+                            string email
+                            string password_hash
+                            string role
+                            string avatar_url
+                            datetime created_at
+                        }
+                        FORUM_TOPIC {
+                            int id PK
+                            string title
+                            int author_id FK
+                            datetime created_at
+                        }
+                        FORUM_POST {
+                            int id PK
+                            string content
+                            int author_id FK
+                            int topic_id FK
+                            datetime created_at
+                        }
+                        PRODUCT {
+                            int id PK
+                            string title
+                            decimal price
+                            int artist_id FK
+                            string status
+                        }
+                        AUCTION_LOT {
+                            int id PK
+                            string title
+                            decimal starting_price
+                            decimal current_price
+                            datetime end_date
+                        }
+                        BID {
+                            int id PK
+                            decimal amount
+                            int user_id FK
+                            int lot_id FK
+                        }
+                </div>
+            </div>
+
+            <!-- Технічна реалізація -->
+            <div class="report-section">
+                <h2>💻 ТЕХНІЧНА РЕАЛІЗАЦІЯ</h2>
+                <h3>Адаптивна сітка (CSS Grid + Media Queries)</h3>
+                <div class="code-block">
+                    <pre>.card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+}
+
+@media (max-width: 768px) {
+    .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+}</pre>
+                </div>
+                
+                <h3>Анімації та Hover-ефекти</h3>
+                <div class="code-block">
+                    <pre>.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-gold);
+}
+
+.card img {
+    transition: transform 0.5s ease;
+}
+
+.card:hover img {
+    transform: scale(1.05);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}</pre>
+                </div>
+                
+                <h3>Файлова структура проєкту</h3>
+                <div class="file-structure">
+                    <pre>
+artist-platform/
+│
+├── index.html                   # Головна сторінка (хаб)
+├── lab1.html                    # Звіт ЛР №1
+├── README.md                    # Документація
+│
+├── /css/
+│   └── style.css                # Всі стилі проєкту
+│
+├── /js/
+│   └── main.js                  # JavaScript для бургер-меню
+│
+├── /assets/
+│   ├── /images/                 # Зображення для контенту
+│   └── /icons/                  # Іконки та логотипи
+                    </pre>
+                </div>
+            </div>
+
+            <!-- Висновки -->
+            <div class="report-section">
+                <h2>📝 ВИСНОВКИ</h2>
+                <p>У ході виконання лабораторної роботи №1 було:</p>
+                <ul>
+                    <li>Проаналізовано предметну область та виявлено потребу в єдиній платформі для художників</li>
+                    <li>Сформульовано функціональні та нефункціональні вимоги до системи</li>
+                    <li>Спроєктовано Use-case та ER-діаграми</li>
+                    <li>Реалізовано адаптивний інтерфейс з використанням HTML5, CSS3 (Flexbox/Grid) та медіа-запитів</li>
+                    <li>Створено бургер-меню з анімацією для мобільних пристроїв</li>
+                    <li>Додано інтерактивні елементи та hover-ефекти</li>
+                    <li>Організовано роботу з Git та підготовлено документацію</li>
+                </ul>
+                <br>
+                <p><strong>Отримані навички:</strong> проєктування інформаційних систем, семантична верстка, адаптивний веб-дизайн, CSS Grid/Flexbox, робота з Git.</p>
+                <p><strong>Посилання на репозиторій:</strong> <a href="https://github.com/fwrwxx/art-forum.git" target="_blank">https://github.com/fwrwxx/art-forum.git</a></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>ArtHub</h4>
+                    <p>Форум, магазин та аукціон в одному місці.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Навігація</h4>
+                    <ul>
+                        <li><a href="index.html">Лабораторні роботи</a></li>
+                        <li><a href="lab1.html">Звіт ЛР №1</a></li>
+                        <li><a href="https://github.com/fwrwxx/art-forum" target="_blank">GitHub репозиторій</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакти</h4>
+                    <p>Email: shtyfliuko@gmail.com</p>
+                    <p>Студентка: Штифлюк Ольга</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Соціальні мережі</h4>
+                    <div class="social-links">
+                        <a href="#"><img src="assets/icons/facebook.png" alt="Facebook"></a>
+                        <a href="#"><img src="assets/icons/instagram.png" alt="Instagram"></a>
+                        <a href="#"><img src="assets/icons/twitter.png" alt="Twitter"></a>
+                        <a href="#"><img src="assets/icons/pinterest.png" alt="Pinterest"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ArtHub. Всі права захищені.</p>
+                <p>Штифлюк Ольга Володимирівна</p>
+            </div>
+        </div>
+    </footer>
+    <script src="js/main.js"></script>
+</body>
+</html>

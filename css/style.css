@@ -637,3 +637,186 @@ footer {
 .emerald-border {
     border: 2px solid var(--primary-color);
 }
+
+/* ===== ДОДАТКОВІ СТИЛІ ДЛЯ ЛАБОРАТОРНИХ РОБІТ ===== */
+.labs-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)) !important;
+}
+
+.lab-card {
+    position: relative;
+    transition: var(--transition);
+    background: linear-gradient(135deg, var(--white) 0%, #fff9f0 100%);
+}
+
+.lab-number {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: var(--white);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.lab-meta {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.lab-meta span:first-child {
+    background: var(--bg-light);
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+}
+
+.lab-meta span:last-child {
+    background: rgba(46, 139, 86, 0.1);
+    color: var(--primary-color);
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+}
+
+.btn-secondary.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Стилі для таблиць у звіті */
+.requirement-table, .business-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+}
+
+.requirement-table th, .business-table th,
+.requirement-table td, .business-table td {
+    border: 1px solid #e0e0e0;
+    padding: 0.75rem;
+    text-align: left;
+    vertical-align: top;
+}
+
+.requirement-table th, .business-table th {
+    background: linear-gradient(135deg, var(--primary-light), var(--primary-color));
+    color: white;
+    font-weight: 600;
+}
+
+.requirement-table tr:nth-child(even), .business-table tr:nth-child(even) {
+    background-color: var(--bg-light);
+}
+
+/* Стилі для mermaid діаграм */
+.mermaid {
+    background: var(--bg-light);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    margin: 1.5rem 0;
+    text-align: center;
+    overflow-x: auto;
+}
+
+/* Стилі для блоків коду */
+.code-block {
+    background: #1e1e1e;
+    color: #d4d4d4;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    margin: 1rem 0;
+}
+
+.code-block pre {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Файлова структура */
+.file-structure {
+    background: var(--bg-light);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    font-family: monospace;
+    font-size: 0.85rem;
+    overflow-x: auto;
+}
+
+/* Корисні посилання */
+.useful-links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.useful-link-card {
+    background: var(--bg-light);
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    border-left: 3px solid var(--secondary-color);
+    transition: var(--transition);
+}
+
+.useful-link-card:hover {
+    transform: translateX(5px);
+    box-shadow: var(--shadow);
+}
+
+.useful-link-card a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.05rem;
+}
+
+.useful-link-card a:hover {
+    color: var(--secondary-color);
+}
+
+.useful-link-card p {
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+/* Адаптивність для звіту */
+@media (max-width: 768px) {
+    .labs-grid {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .requirement-table, .business-table {
+        font-size: 0.8rem;
+    }
+    
+    .requirement-table th, .business-table th,
+    .requirement-table td, .business-table td {
+        padding: 0.5rem;
+    }
+    
+    .useful-links-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .code-block {
+        font-size: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .requirement-table, .business-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
