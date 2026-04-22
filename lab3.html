@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtHub - Звіт ЛР №3 | REST API. Реєстрація та авторизація</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="assets/icons/logo.png" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2C3E50;
+            background: linear-gradient(135deg, #F5F5F5 0%, #f0f3e8 100%);
+        }
+        
+        .report-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .report-section {
+            margin-bottom: 2.5rem;
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .report-section h2 {
+            color: #2E8B57;
+            border-left: 4px solid #D4AF37;
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .report-section h3 {
+            color: #2C3E50;
+            margin: 1.5rem 0 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .test-result {
+            background: #f8f9fa;
+            border-left: 4px solid #2E8B57;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+        
+        .test-result h4 {
+            color: #2E8B57;
+            margin-top: 0;
+        }
+        
+        .test-result pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.8rem;
+        }
+        
+        .endpoint-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .endpoint-item {
+            background: #f5f5f5;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+        
+        .endpoint-item .method {
+            color: #2E8B57;
+            font-weight: bold;
+        }
+        
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .task-card {
+            background: linear-gradient(135deg, #f9f6e8, var(--white));
+            border-left: 4px solid var(--secondary-color);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        
+        .task-card.completed {
+            border-left-color: #2E8B57;
+            background: linear-gradient(135deg, #e8f5e9, white);
+        }
+        
+        .task-card .status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        
+        .status-success {
+            background: #2E8B57;
+            color: white;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #2E8B57, #1f5f3a);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #2E8B57, #1f5f3a);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            margin: 0.5rem;
+            transition: transform 0.2s;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .report-section {
+                padding: 1rem;
+            }
+            .endpoint-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar container">
+            <div class="logo">
+                <img src="assets/icons/logo.png" alt="ArtHub Logo">
+                <span>ArtHub</span>
+            </div>
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html">Головна</a></li>
+                <li><a href="lab1.html">ЛР №1</a></li>
+                <li><a href="lab2.html">ЛР №2</a></li>
+                <li><a href="lab3.html" class="active">ЛР №3</a></li>
+                <li><a href="https://github.com/fwrwxx/art-forum" target="_blank">GitHub</a></li>
+                <li class="auth-buttons">
+                    <a href="#" class="btn-login">Увійти</a>
+                    <a href="#" class="btn-register">Реєстрація</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="report-container">
+            <!-- Заголовок -->
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h1>🔐 Лабораторна робота №3</h1>
+                <h2 style="color: #D4AF37;">Розробка функціонального REST API. Реєстрація та авторизація користувачів. Валідація даних і обробка помилок</h2>
+                <p><strong>Дисципліна:</strong> WEB-орієнтовані технології. Backend розробки</p>
+                <p><strong>Студентка:</strong> Штифлюк Ольга Володимирівна</p>
+                <p><strong>Дата виконання:</strong> 22 квітня 2026 року</p>
+            </div>
+
+            <!-- Мета роботи -->
+            <div class="report-section">
+                <h2>🎯 Мета роботи</h2>
+                <ul>
+                    <li>Вивчення принципів побудови REST API</li>
+                    <li>Набуття практичних навичок розробки серверного застосунку з використанням Node.js і Express</li>
+                    <li>Реалізація механізмів реєстрації та авторизації користувачів</li>
+                    <li>Забезпечення валідації вхідних даних та обробки помилок</li>
+                    <li>Організація захищеного доступу до ресурсів з використанням JWT-токенів і системи ролей</li>
+                </ul>
+            </div>
+
+            <!-- Технології -->
+            <div class="report-section">
+                <h2>🛠️ Використані технології</h2>
+                <div class="task-grid">
+                    <div class="task-card completed">
+                        <strong>Node.js</strong>
+                        <p>Середовище виконання JavaScript</p>
+                    </div>
+                    <div class="task-card completed">
+                        <strong>Express.js</strong>
+                        <p>Фреймворк для створення REST API</p>
+                    </div>
+                    <div class="task-card completed">
+                        <strong>MySQL + Sequelize</strong>
+                        <p>База даних та ORM</p>
+                    </div>
+                    <div class="task-card completed">
+                        <strong>JWT (jsonwebtoken)</strong>
+                        <p>Аутентифікація та авторизація</p>
+                    </div>
+                    <div class="task-card completed">
+                        <strong>bcryptjs</strong>
+                        <p>Хешування паролів</p>
+                    </div>
+                    <div class="task-card completed">
+                        <strong>Joi</strong>
+                        <p>Валідація даних</p>
+                    </div>
+                    <div class="task-card completed">
+                        <strong>Nodemailer</strong>
+                        <p>Відправка email</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Endpoints -->
+            <div class="report-section">
+                <h2>🔗 API Endpoints</h2>
+                
+                <h3>Аутентифікація</h3>
+                <div class="endpoint-list">
+                    <div class="endpoint-item"><span class="method">POST</span> /api/auth/register - Реєстрація</div>
+                    <div class="endpoint-item"><span class="method">POST</span> /api/auth/login - Вхід</div>
+                    <div class="endpoint-item"><span class="method">POST</span> /api/auth/logout - Вихід</div>
+                    <div class="endpoint-item"><span class="method">POST</span> /api/auth/refresh-token - Оновлення токену</div>
+                    <div class="endpoint-item"><span class="method">GET</span> /api/auth/verify-email/:token - Підтвердження email</div>
+                    <div class="endpoint-item"><span class="method">POST</span> /api/auth/forgot-password - Запит на відновлення</div>
+                    <div class="endpoint-item"><span class="method">POST</span> /api/auth/reset-password/:token - Скидання пароля</div>
+                </div>
+                
+                <h3>Профіль</h3>
+                <div class="endpoint-list">
+                    <div class="endpoint-item"><span class="method">GET</span> /api/profile/me - Отримання профілю</div>
+                    <div class="endpoint-item"><span class="method">PUT</span> /api/profile/me - Оновлення профілю</div>
+                    <div class="endpoint-item"><span class="method">PUT</span> /api/profile/me/change-password - Зміна пароля</div>
+                </div>
+                
+                <h3>Управління користувачами (Admin)</h3>
+                <div class="endpoint-list">
+                    <div class="endpoint-item"><span class="method">GET</span> /api/users - Всі користувачі</div>
+                    <div class="endpoint-item"><span class="method">GET</span> /api/users/:id - Користувач за ID</div>
+                    <div class="endpoint-item"><span class="method">PUT</span> /api/users/:id - Оновлення користувача</div>
+                    <div class="endpoint-item"><span class="method">DELETE</span> /api/users/:id - Видалення користувача</div>
+                </div>
+            </div>
+
+            <!-- Результати тестування -->
+            <div class="report-section">
+                <h2>Результати тестування API</h2>
+                
+                <div class="test-result">
+                    <h4>📝 Тест 1: Реєстрація користувача</h4>
+                    <pre>POST /api/auth/register
+{
+    "email": "test_1234567890@arthub.com",
+    "password": "Password123!",
+    "confirmPassword": "Password123!",
+    "full_name": "Тестовий Користувач"
+}</pre>
+                    <pre>{
+    "success": true,
+    "message": "Registration successful. Please check your email for verification.",
+    "data": {
+        "user": {
+            "id": 5,
+            "email": "test_1234567890@arthub.com",
+            "full_name": "Тестовий Користувач",
+            "role": "user"
+        },
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    }
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>🔐 Тест 2: Вхід в систему (Логін)</h4>
+                    <pre>POST /api/auth/login
+{
+    "email": "test@arthub.com",
+    "password": "Password123!"
+}</pre>
+                    <pre>{
+    "success": true,
+    "message": "Login successful",
+    "data": {
+        "user": {
+            "id": 1,
+            "email": "test@arthub.com",
+            "full_name": "Тестовий Користувач",
+            "role": "user"
+        },
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    }
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>👤 Тест 3: Отримання профілю (захищений маршрут)</h4>
+                    <pre>GET /api/profile/me
+Authorization: Bearer &lt;access_token&gt;</pre>
+                    <pre>{
+    "success": true,
+    "data": {
+        "id": 1,
+        "email": "test@arthub.com",
+        "full_name": "Тестовий Користувач",
+        "role": "user",
+        "is_email_verified": true,
+        "created_at": "2026-04-22T10:00:00.000Z"
+    }
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>✏️ Тест 4: Оновлення профілю</h4>
+                    <pre>PUT /api/profile/me
+Authorization: Bearer &lt;access_token&gt;
+{
+    "full_name": "Оновлений Користувач API"
+}</pre>
+                    <pre>{
+    "success": true,
+    "message": "Profile updated successfully",
+    "data": {
+        "id": 1,
+        "email": "test@arthub.com",
+        "full_name": "Оновлений Користувач API"
+    }
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>🔄 Тест 5: Оновлення токену (Refresh Token)</h4>
+                    <pre>POST /api/auth/refresh-token
+{
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}</pre>
+                    <pre>{
+    "success": true,
+    "data": {
+        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    }
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>⚠️ Тест 6: Валідація даних (некоректний email)</h4>
+                    <pre>POST /api/auth/register
+{
+    "email": "invalid-email",
+    "password": "Password123!",
+    "confirmPassword": "Password123!"
+}</pre>
+                    <pre>{
+    "success": false,
+    "message": "\"email\" must be a valid email"
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>🚫 Тест 7: Доступ без токена</h4>
+                    <pre>GET /api/profile/me</pre>
+                    <pre>{
+    "success": false,
+    "message": "Not authorized, no token"
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>🚪 Тест 8: Вихід з системи (Logout)</h4>
+                    <pre>POST /api/auth/logout
+Authorization: Bearer &lt;access_token&gt;
+{
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}</pre>
+                    <pre>{
+    "success": true,
+    "message": "Logout successful"
+}</pre>
+                </div>
+            </div>
+
+            <!-- Виконані завдання -->
+            <div class="report-section">
+                <h2>📋 Виконані завдання</h2>
+                <div class="task-grid">
+                    <div class="task-card completed">1. Встановлення бібліотек ✅</div>
+                    <div class="task-card completed">2. Реєстрація та авторизація ✅</div>
+                    <div class="task-card completed">3. Валідація даних та обробка помилок ✅</div>
+                    <div class="task-card completed">4. Захищений маршрут ✅</div>
+                    <div class="task-card completed">5. Тестування через Postman ✅</div>
+                    <div class="task-card completed">6. Аналіз результатів ✅</div>
+                    <div class="task-card completed">7. Підтвердження пароля при реєстрації ✅</div>
+                    <div class="task-card completed">8. Роль користувача (admin/user) ✅</div>
+                    <div class="task-card completed">9. Реалізація logout ✅</div>
+                    <div class="task-card completed">10. Оновлення профілю ✅</div>
+                    <div class="task-card completed">11. Зберігання користувачів у БД ✅</div>
+                    <div class="task-card completed">12. Реалізація refresh token ✅</div>
+                    <div class="task-card completed">13. Логування помилок ✅</div>
+                    <div class="task-card completed">14. Обмеження спроб входу ✅</div>
+                    <div class="task-card completed">15. Middleware для перевірки токена ✅</div>
+                    <div class="task-card completed">16. Зміна пароля ✅</div>
+                    <div class="task-card completed">17. Видалення користувача ✅</div>
+                    <div class="task-card completed">18. Відновлення пароля ✅</div>
+                    <div class="task-card completed">19. Підтвердження email ✅</div>
+                    <div class="task-card">20. OAuth (Google login) ⏳</div>
+                </div>
+            </div>
+
+            <!-- Посилання для завантаження -->
+            <div class="report-section">
+                <h2>📥 Завантажити файли для тестування</h2>
+                <div style="text-align: center; margin: 1rem 0;">
+                    <a href="#" class="download-btn" id="downloadCollection">📦 Завантажити Postman Collection</a>
+                    <a href="#" class="download-btn" id="downloadEnv">🌍 Завантажити Postman Environment</a>
+                    <a href="#" class="download-btn" id="downloadTest">🐚 Завантажити test-api.sh</a>
+                </div>
+                <p style="text-align: center; margin-top: 1rem;">
+                    <strong>Інструкція:</strong> Після завантаження файлів, відкрийте Postman → Import → Оберіть завантажені файли.
+                </p>
+            </div>
+
+            <!-- Висновки -->
+            <div class="report-section">
+                <h2>📝 Висновки</h2>
+                <p>У ході виконання лабораторної роботи №3 було:</p>
+                <ul>
+                    <li>Вивчено принципи побудови REST API та їх практичну реалізацію</li>
+                    <li>Розроблено повноцінний серверний застосунок на Node.js + Express.js</li>
+                    <li>Реалізовано механізми реєстрації та авторизації з JWT-токенами</li>
+                    <li>Створено систему ролей (user/admin) з розмежуванням доступу</li>
+                    <li>Реалізовано валідацію вхідних даних за допомогою Joi</li>
+                    <li>Додано обмеження кількості спроб входу (rate limiting)</li>
+                    <li>Реалізовано refresh token механізм для безпечної сесії</li>
+                    <li>Додано підтвердження email через nodemailer</li>
+                    <li>Реалізовано відновлення пароля</li>
+                    <li>Створено middleware для перевірки токенів та обробки помилок</li>
+                    <li>Проведено повне тестування API через Postman та cURL</li>
+                </ul>
+                
+                <h3>Отримані навички:</h3>
+                <ul>
+                    <li>Проектування та реалізація REST API</li>
+                    <li>Робота з JWT-токенами для аутентифікації</li>
+                    <li>Хешування паролів з bcryptjs</li>
+                    <li>Валідація даних та обробка помилок</li>
+                    <li>Створення middleware в Express.js</li>
+                    <li>Робота з email-сповіщеннями</li>
+                </ul>
+            </div>
+
+            <!-- Контрольні питання -->
+            <div class="report-section">
+                <h2>❓ Контрольні питання</h2>
+                <ol>
+                    <li><strong>Що таке REST API та які його основні принципи?</strong> - REST API - це архітектурний стиль взаємодії клієнта і сервера через HTTP. Основні принципи: клієнт-серверна архітектура, stateless (без стану), використання HTTP методів, уніфікований інтерфейс.</li>
+                    <li><strong>Які HTTP-методи використовуються в REST API?</strong> - GET (отримання), POST (створення), PUT/PATCH (оновлення), DELETE (видалення).</li>
+                    <li><strong>Що таке реєстрація та авторизація?</strong> - Реєстрація - створення нового користувача. Авторизація - перевірка облікових даних та надання доступу.</li>
+                    <li><strong>Для чого використовується JWT?</strong> - JWT використовується для створення безпечних токенів аутентифікації, які містять інформацію про користувача.</li>
+                    <li><strong>Що таке middleware в Express?</strong> - Middleware - це функції, які виконуються між отриманням запиту та відправкою відповіді.</li>
+                </ol>
+            </div>
+
+            <!-- Посилання -->
+            <div class="report-section">
+                <h2>🔗 Посилання</h2>
+                <ul>
+                    <li><strong>GitHub репозиторій:</strong> <a href="https://github.com/fwrwxx/art-forum" target="_blank">https://github.com/fwrwxx/art-forum</a></li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>ArtHub</h4>
+                    <p>Форум, магазин та аукціон в одному місці.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Навігація</h4>
+                    <ul>
+                        <li><a href="index.html">Головна</a></li>
+                        <li><a href="lab1.html">ЛР №1</a></li>
+                        <li><a href="lab2-report.html">ЛР №2</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакти</h4>
+                    <p>Email: shtyfliuko@gmail.com</p>
+                    <p>Студентка: Штифлюк Ольга</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Соціальні мережі</h4>
+                    <div class="social-links">
+                        <a href="#"><img src="assets/icons/facebook.png" alt="Facebook"></a>
+                        <a href="#"><img src="assets/icons/instagram.png" alt="Instagram"></a>
+                        <a href="#"><img src="assets/icons/twitter.png" alt="Twitter"></a>
+                        <a href="#"><img src="assets/icons/pinterest.png" alt="Pinterest"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ArtHub. Всі права захищені.</p>
+                <p>Штифлюк Ольга Володимирівна</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Функція для завантаження файлів
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+        }
+
+        // Завантаження Postman Collection
+        document.getElementById('downloadCollection').addEventListener('click', (e) => {
+            e.preventDefault();
+            const collection = {
+                "info": {
+                    "name": "ArtHub Auth API - Лабораторна робота №3",
+                    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+                },
+                "item": [
+                    {
+                        "name": "Реєстрація",
+                        "request": {
+                            "method": "POST",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": {"mode": "raw", "raw": "{\n    \"email\": \"test@arthub.com\",\n    \"password\": \"Password123!\",\n    \"confirmPassword\": \"Password123!\",\n    \"full_name\": \"Тестовий Користувач\"\n}"},
+                            "url": {"raw": "{{base_url}}/api/auth/register", "host": ["{{base_url}}"], "path": ["api", "auth", "register"]}
+                        }
+                    },
+                    {
+                        "name": "Логін",
+                        "request": {
+                            "method": "POST",
+                            "header": [{"key": "Content-Type", "value": "application/json"}],
+                            "body": {"mode": "raw", "raw": "{\n    \"email\": \"test@arthub.com\",\n    \"password\": \"Password123!\"\n}"},
+                            "url": {"raw": "{{base_url}}/api/auth/login", "host": ["{{base_url}}"], "path": ["api", "auth", "login"]}
+                        }
+                    },
+                    {
+                        "name": "Профіль",
+                        "request": {
+                            "method": "GET",
+                            "header": [{"key": "Authorization", "value": "Bearer {{accessToken}}"}],
+                            "url": {"raw": "{{base_url}}/api/profile/me", "host": ["{{base_url}}"], "path": ["api", "profile", "me"]}
+                        }
+                    }
+                ],
+                "variable": [{"key": "base_url", "value": "http://localhost:3000"}]
+            };
+            downloadFile(JSON.stringify(collection, null, 2), 'postman_collection.json', 'application/json');
+        });
+
+        // Завантаження Environment
+        document.getElementById('downloadEnv').addEventListener('click', (e) => {
+            e.preventDefault();
+            const environment = {
+                "name": "ArtHub Auth API - Local",
+                "values": [
+                    {"key": "base_url", "value": "http://localhost:3000", "enabled": true},
+                    {"key": "accessToken", "value": "", "enabled": true},
+                    {"key": "refreshToken", "value": "", "enabled": true},
+                    {"key": "userId", "value": "", "enabled": true}
+                ]
+            };
+            downloadFile(JSON.stringify(environment, null, 2), 'postman_environment.json', 'application/json');
+        });
+
+        // Завантаження test-api.sh
+        document.getElementById('downloadTest').addEventListener('click', (e) => {
+            e.preventDefault();
+            const testScript = `#!/bin/bash
+
+BASE_URL="http://localhost:3000"
+
+echo "Testing ArtHub Auth API..."
+
+# Test 1: Health Check
+curl -s -X GET "${BASE_URL}/health" | jq '.'
+
+# Test 2: Register
+curl -s -X POST "${BASE_URL}/api/auth/register" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test_'$(date +%s)'@arthub.com","password":"Password123!","confirmPassword":"Password123!","full_name":"Test User"}' | jq '.'
+
+# Test 3: Login
+LOGIN_RESPONSE=$(curl -s -X POST "${BASE_URL}/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@arthub.com","password":"Password123!"}')
+
+echo $LOGIN_RESPONSE | jq '.'
+
+ACCESS_TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.data.accessToken')
+
+# Test 4: Get Profile
+curl -s -X GET "${BASE_URL}/api/profile/me" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" | jq '.'
+
+echo "Testing completed!"`;
+            downloadFile(testScript, 'test-api.sh', 'text/plain');
+        });
+    </script>
+    <script src="js/main.js"></script>
+</body>
+</html>
