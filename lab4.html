@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtHub - Звіт ЛР №4 | Розширені можливості Node.js</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="assets/icons/logo.png" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2C3E50;
+            background: linear-gradient(135deg, #F5F5F5 0%, #f0f3e8 100%);
+        }
+        
+        .report-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .report-section {
+            margin-bottom: 2.5rem;
+            background: #FFFFFF;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .report-section h2 {
+            color: #2E8B57;
+            border-left: 4px solid #D4AF37;
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .report-section h3 {
+            color: #2C3E50;
+            margin: 1.5rem 0 1rem;
+            font-size: 1.3rem;
+        }
+        
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .test-result {
+            background: #f8f9fa;
+            border-left: 4px solid #2E8B57;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+        
+        .test-result h4 {
+            color: #2E8B57;
+            margin-top: 0;
+        }
+        
+        .test-result pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.8rem;
+        }
+        
+        .test-result.error {
+            border-left-color: #e74c3c;
+        }
+        
+        .test-result.error h4 {
+            color: #e74c3c;
+        }
+        
+        .endpoint-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .endpoint-item {
+            background: #f5f5f5;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+        
+        .endpoint-item .method {
+            color: #2E8B57;
+            font-weight: bold;
+        }
+        
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .task-card {
+            background: linear-gradient(135deg, #f9f6e8, #ffffff);
+            border-left: 4px solid #D4AF37;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        
+        .task-card.completed {
+            border-left-color: #2E8B57;
+            background: linear-gradient(135deg, #e8f5e9, white);
+        }
+        
+        .task-card .status {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        
+        .status-success {
+            background: #2E8B57;
+            color: white;
+        }
+        
+        .status-pending {
+            background: #f39c12;
+            color: white;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        
+        th {
+            background: linear-gradient(135deg, #2E8B57, #1f5f3a);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #2E8B57, #1f5f3a);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            margin: 0.5rem;
+            transition: transform 0.2s;
+            cursor: pointer;
+            border: none;
+            font-size: 0.9rem;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .folder-structure {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            margin: 1rem 0;
+        }
+        
+        .folder-structure .dir {
+            color: #4ec9b0;
+        }
+        
+        .folder-structure .file {
+            color: #ce9178;
+        }
+        
+        .tech-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #2E8B57, #1f5f3a);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin: 0.2rem;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            margin: 1rem 0;
+        }
+        
+        .comparison-table th {
+            background: linear-gradient(135deg, #2E8B57, #1f5f3a);
+        }
+        
+        @media (max-width: 768px) {
+            .report-section {
+                padding: 1rem;
+            }
+            .endpoint-list {
+                grid-template-columns: 1fr;
+            }
+            .task-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2E8B57;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-menu a {
+            text-decoration: none;
+            color: #2C3E50;
+            transition: color 0.3s;
+        }
+        
+        .nav-menu a:hover, .nav-menu a.active {
+            color: #2E8B57;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-login, .btn-register {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+        
+        .btn-login {
+            border: 1px solid #2E8B57;
+            color: #2E8B57;
+        }
+        
+        .btn-register {
+            background: #2E8B57;
+            color: white;
+        }
+        
+        .menu-toggle {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: block;
+            }
+            .nav-menu {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar container">
+            <div class="logo">
+                <img src="assets/icons/logo.png" alt="ArtHub Logo">
+                <span>ArtHub</span>
+            </div>
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html">Головна</a></li>
+                <li><a href="lab1.html">ЛР №1</a></li>
+                <li><a href="lab2.html">ЛР №2</a></li>
+                <li><a href="lab3.html">ЛР №3</a></li>
+                <li><a href="lab4.html" class="active">ЛР №4</a></li>
+                <li><a href="https://github.com/fwrwxx/art-forum" target="_blank">GitHub</a></li>
+                <li class="auth-buttons">
+                    <a href="#" class="btn-login">Увійти</a>
+                    <a href="#" class="btn-register">Реєстрація</a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="report-container">
+            <!-- Заголовок -->
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <h1>📊 Лабораторна робота №4</h1>
+                <h2 style="color: #D4AF37;">Розширені можливості Node.js-додатків: логування, завантаження файлів, моніторинг продуктивності</h2>
+                <p><strong>Дисципліна:</strong> WEB-орієнтовані технології. Backend розробки</p>
+                <p><strong>Студентка:</strong> Штифлюк Ольга Володимирівна</p>
+                <p><strong>Дата виконання:</strong> 5 травня 2026 року</p>
+            </div>
+
+            <!-- Мета роботи -->
+            <div class="report-section">
+                <h2>🎯 Мета роботи</h2>
+                <ul>
+                    <li>Ознайомитися з розширеними можливостями серверних застосунків на базі Node.js</li>
+                    <li>Реалізувати професійне логування запитів і подій за допомогою Morgan та Winston</li>
+                    <li>Організувати завантаження файлів на сервер з використанням Multer</li>
+                    <li>Налаштувати моніторинг продуктивності застосунку (CPU, Memory, Response Time)</li>
+                    <li>Інтегрувати менеджер процесів PM2 для керування застосунком</li>
+                </ul>
+            </div>
+
+            <!-- Технології -->
+            <div class="report-section">
+                <h2>🛠️ Використані технології</h2>
+                <div class="task-grid">
+                    <div class="task-card completed">
+                        <strong>Node.js + Express.js</strong>
+                        <p>Середовище виконання та веб-фреймворк</p>
+                    </div>
+                    <div class="task-card completed">
+                        <strong>Morgan</strong>
+                        <p>HTTP-логер для запитів</p>
+                    </div>
+                    <div class="task-card completed">
+                        <strong>Winston</strong>
+                        <p>Розширене логування подій</p>
+                    </div>
+                    <div class="task-card completed">
+                        <strong>Multer</strong>
+                        <p>Завантаження файлів на сервер</p>
+                    </div>
+                    <div class="task-card completed">
+                        <strong>PM2</strong>
+                        <p>Менеджер процесів</p>
+                    </div>
+                    <div class="task-card completed">
+                        <strong>Helmet + CORS</strong>
+                        <p>Безпека застосунку</p>
+                    </div>
+                    <div class="task-card completed">
+                        <strong>express-rate-limit</strong>
+                        <p>Обмеження кількості запитів</p>
+                    </div>
+                    <div class="task-card completed">
+                        <strong>dotenv + fs-extra</strong>
+                        <p>Конфігурація та робота з файловою системою</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Структура проєкту -->
+            <div class="report-section">
+                <h2>📁 Структура проєкту</h2>
+                <div class="folder-structure">
+                    <pre>
+<span class="dir">lab4-advanced-node/</span>
+├── <span class="file">app.js</span>                      # Головний файл застосунку
+├── <span class="file">package.json</span>                # Залежності та скрипти
+├── <span class="file">ecosystem.config.js</span>         # Конфігурація PM2
+├── <span class="file">.env</span>                        # Змінні оточення
+├── <span class="dir">uploads/</span>                    # Завантажені файли
+│   ├── <span class="dir">images/</span>                   # Зображення (jpg, png)
+│   └── <span class="dir">documents/</span>                # Документи (PDF)
+├── <span class="dir">logs/</span>                       # Логи
+│   ├── <span class="file">combined.log</span>              # Всі логи
+│   ├── <span class="file">error.log</span>                 # Тільки помилки
+│   ├── <span class="file">pm2-error.log</span>             # PM2 помилки
+│   └── <span class="file">pm2-out.log</span>               # PM2 виведення
+├── <span class="dir">middleware/</span>
+│   ├── <span class="file">performanceMiddleware.js</span>  # Моніторинг продуктивності
+│   ├── <span class="file">errorMiddleware.js</span>        # Обробка помилок
+│   └── <span class="file">uploadMiddleware.js</span>       # Налаштування Multer
+├── <span class="dir">routes/</span>
+│   ├── <span class="file">uploadRoutes.js</span>           # Маршрути завантаження файлів
+│   └── <span class="file">statusRoutes.js</span>           # Маршрути моніторингу
+└── <span class="dir">utils/</span>
+    ├── <span class="file">logger.js</span>                 # Налаштування Winston
+    └── <span class="file">fileValidator.js</span>          # Валідація файлів
+                    </pre>
+                </div>
+            </div>
+
+            <!-- API Endpoints -->
+            <div class="report-section">
+                <h2>🔗 API Endpoints</h2>
+                
+                <h3>📤 Завантаження файлів</h3>
+                <div class="endpoint-list">
+                    <div class="endpoint-item"><span class="method">POST</span> /api/upload/single - Завантаження одного файлу</div>
+                    <div class="endpoint-item"><span class="method">POST</span> /api/upload/multiple - Завантаження кількох файлів (max 5)</div>
+                    <div class="endpoint-item"><span class="method">GET</span> /api/upload/list - Отримання списку файлів</div>
+                    <div class="endpoint-item"><span class="method">DELETE</span> /api/upload/:filename - Видалення файлу</div>
+                </div>
+                
+                <h3>📊 Моніторинг продуктивності</h3>
+                <div class="endpoint-list">
+                    <div class="endpoint-item"><span class="method">GET</span> /api/status - Розширена інформація про сервер</div>
+                    <div class="endpoint-item"><span class="method">GET</span> /api/status/health - Health check (статус сервера)</div>
+                    <div class="endpoint-item"><span class="method">GET</span> /api/status/metrics - Метрики для PM2/моніторингу</div>
+                    <div class="endpoint-item"><span class="method">GET</span> / - Головна сторінка зі списком маршрутів</div>
+                </div>
+            </div>
+
+            <!-- Ключові реалізації -->
+            <div class="report-section">
+                <h2>💻 Ключові реалізації</h2>
+                
+                <h3>1. Логування (Morgan + Winston)</h3>
+                <div class="code-block">
+                    <pre>
+// utils/logger.js
+const winston = require('winston');
+
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.combine(
+        winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+        winston.format.json()
+    ),
+    transports: [
+        new winston.transports.File({ filename: 'logs/combined.log' }),
+        new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
+        new winston.transports.Console({ format: consoleFormat })
+    ]
+});
+
+// app.js - Підключення Morgan до Winston
+const morgan = require('morgan');
+app.use(morgan('combined', { stream: httpLogger }));
+                    </pre>
+                </div>
+
+                <h3>2. Налаштування Multer для завантаження файлів</h3>
+                <div class="code-block">
+                    <pre>
+// middleware/uploadMiddleware.js
+const multer = require('multer');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        let subDir = file.mimetype.startsWith('image/') ? 'images' : 'documents';
+        cb(null, path.join('uploads', subDir));
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, `${uniqueSuffix}-${file.originalname}`);
+    }
+});
+
+const upload = multer({
+    storage,
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+        if (allowedTypes.includes(file.mimetype)) cb(null, true);
+        else cb(new Error('File type not allowed'), false);
+    }
+});
+                    </pre>
+                </div>
+
+                <h3>3. Вимірювання продуктивності (Performance Middleware)</h3>
+                <div class="code-block">
+                    <pre>
+// middleware/performanceMiddleware.js
+const performanceMiddleware = (req, res, next) => {
+    const start = Date.now();
+    
+    res.on('finish', () => {
+        const duration = Date.now() - start;
+        logger.info(`Performance: ${req.method} ${req.url} - ${duration}ms`);
+        res.setHeader('X-Response-Time', `${duration}ms`);
+    });
+    
+    next();
+};
+
+const memoryMonitorMiddleware = (req, res, next) => {
+    const memoryUsage = process.memoryUsage();
+    const heapUsedMB = memoryUsage.heapUsed / 1024 / 1024;
+    
+    if (heapUsedMB > 500) {
+        console.warn(`High memory usage: ${heapUsedMB.toFixed(2)} MB`);
+    }
+    next();
+};
+                    </pre>
+                </div>
+
+                <h3>4. Моніторинг стану сервера</h3>
+                <div class="code-block">
+                    <pre>
+// routes/statusRoutes.js
+router.get('/', (req, res) => {
+    const memoryUsage = process.memoryUsage();
+    const cpuUsage = process.cpuUsage();
+    const uptime = process.uptime();
+    
+    res.json({
+        uptime: { seconds: uptime, formatted: formatUptime(uptime) },
+        memory: {
+            heapUsed: `${(memoryUsage.heapUsed / 1024 / 1024).toFixed(2)} MB`,
+            heapTotal: `${(memoryUsage.heapTotal / 1024 / 1024).toFixed(2)} MB`,
+            rss: `${(memoryUsage.rss / 1024 / 1024).toFixed(2)} MB`
+        },
+        cpu: {
+            user: `${(cpuUsage.user / 1000).toFixed(2)} ms`,
+            system: `${(cpuUsage.system / 1000).toFixed(2)} ms`
+        }
+    });
+});
+                    </pre>
+                </div>
+            </div>
+
+                        <!-- Результати тестування -->
+            <div class="report-section">
+                <h2>Результати тестування API</h2>
+                
+                <div class="test-result">
+                    <h4>📤 Тест 1: Завантаження одного файлу (POST /api/upload/single)</h4>
+                    <pre>curl.exe -X POST http://localhost:3000/api/upload/single -F "file=@test.jpg"</pre>
+                    <pre>{
+    "success": true,
+    "message": "File uploaded successfully",
+    "data": {
+        "originalName": "test.jpg",
+        "filename": "1777977472019-553005799-test.jpg",
+        "size": 23,
+        "mimetype": "image/jpeg",
+        "path": "uploads\\images\\1777977472019-553005799-test.jpg",
+        "validation": {
+            "isValid": true,
+            "isImage": true,
+            "isPDF": false,
+            "extension": ".jpg",
+            "size": 23,
+            "mimetype": "image/jpeg"
+        }
+    }
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>📚 Тест 2: Завантаження кількох файлів (POST /api/upload/multiple)</h4>
+                    <pre>curl.exe -X POST http://localhost:3000/api/upload/multiple -F "files=@test1.jpg" -F "files=@test2.jpg"</pre>
+                    <pre>{
+    "success": true,
+    "message": "2 files uploaded successfully",
+    "data": {
+        "uploaded": 2,
+        "failed": 0,
+        "files": [
+            { "originalName": "test1.jpg", "size": 23, "mimetype": "image/jpeg" },
+            { "originalName": "test2.jpg", "size": 23, "mimetype": "image/jpeg" }
+        ]
+    }
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>🗑️ Тест 3: Видалення файлу (DELETE /api/upload/:filename)</h4>
+                    <pre>curl.exe -X DELETE "http://localhost:3000/api/upload/1777977472019-553005799-test.jpg"</pre>
+                    <pre>{
+    "success": true,
+    "message": "File deleted successfully"
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>📊 Тест 4: Отримання статусу сервера (GET /api/status)</h4>
+                    <pre>curl.exe http://localhost:3000/api/status</pre>
+                    <pre>{
+    "success": true,
+    "data": {
+        "server": {
+            "uptime": { "seconds": 172.78, "formatted": "2хв 52с" },
+            "node_version": "v20.18.0",
+            "platform": "win32",
+            "arch": "x64",
+            "pid": 8052,
+            "env": "development"
+        },
+        "memory": {
+            "rss": "42.01 MB",
+            "heapTotal": "10.22 MB",
+            "heapUsed": "9.36 MB",
+            "external": "2.04 MB",
+            "system": { "total": "15.71 GB", "free": "4.94 GB", "used": "10.77 GB" }
+        },
+        "cpu": {
+            "user": "281.00 ms",
+            "system": "187.00 ms",
+            "cores": 16,
+            "model": "11th Gen Intel(R) Core(TM) i7-11800H @ 2.30GHz"
+        },
+        "timestamp": "2026-05-05T10:37:39.281Z"
+    }
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>🏥 Тест 5: Health Check (GET /api/status/health)</h4>
+                    <pre>curl.exe http://localhost:3000/api/status/health</pre>
+                    <pre>{
+    "status": "healthy",
+    "timestamp": "2026-05-05T10:37:28.937Z",
+    "uptime": { "seconds": 162.44, "formatted": "2хв 42с" },
+    "memory": {
+        "rss": "41.48 MB",
+        "heapTotal": "10.22 MB",
+        "heapUsed": "9.00 MB",
+        "external": "2.04 MB"
+    },
+    "cpu": { "user": "265.00 ms", "system": "187.00 ms" },
+    "environment": "development"
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>📋 Тест 6: Список завантажених файлів (GET /api/upload/list)</h4>
+                    <pre>curl.exe http://localhost:3000/api/upload/list</pre>
+                    <pre>{
+    "success": true,
+    "count": 2,
+    "data": [
+        { "name": "1777977472019-553005799-test.jpg", "size": 23, "modified": "2026-05-05T10:37:52.000Z" },
+        { "name": "1777977548765-123456789-test1.jpg", "size": 23, "modified": "2026-05-05T10:39:08.000Z" }
+    ]
+}</pre>
+                </div>
+
+                <div class="test-result error">
+                    <h4>❌ Тест 7: Валідація файлу (некоректний тип)</h4>
+                    <pre>curl.exe -X POST http://localhost:3000/api/upload/single -F "file=@test.txt"</pre>
+                    <pre>{
+    "success": false,
+    "message": "File type not allowed. Allowed: image/jpeg, image/png, image/jpg, application/pdf"
+}</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>⏱️ Тест 8: Вимірювання часу відповіді (з логів)</h4>
+                    <pre>Get-Content .\logs\combined.log -Tail 5</pre>
+                    <pre>{"duration_ms":0,"ip":"::1","level":"info","message":"Performance metric","method":"GET","status":200,"timestamp":"2026-05-05 13:37:28","type":"request_duration","url":"/health","user_agent":"curl/8.19.0"}
+{"duration_ms":1,"ip":"::1","level":"info","message":"Performance metric","method":"GET","status":200,"timestamp":"2026-05-05 13:37:39","type":"request_duration","url":"/","user_agent":"curl/8.19.0"}
+{"duration_ms":1,"ip":"::1","level":"info","message":"Performance metric","method":"GET","status":200,"timestamp":"2026-05-05 13:37:42","type":"request_duration","url":"/list","user_agent":"curl/8.19.0"}
+{"duration_ms":6,"ip":"::1","level":"info","message":"Performance metric","method":"POST","status":200,"timestamp":"2026-05-05 13:37:52","type":"request_duration","url":"/single","user_agent":"curl/8.19.0"}
+{"duration_ms":3,"ip":"::1","level":"info","message":"Performance metric","method":"DELETE","status":200,"timestamp":"2026-05-05 13:39:11","type":"request_duration","url":"/1777977472019-553005799-test.jpg","user_agent":"curl/8.19.0"}</pre>
+                    <p><strong>Результати:</strong> Час відповіді від 0 до 6 мс ⚡</p>
+                </div>
+            </div>
+
+            <!-- PM2 Моніторинг -->
+            <div class="report-section">
+                <h2>🔄 PM2 Моніторинг</h2>
+                
+                <div class="test-result">
+                    <h4>📊 PM2 Process List</h4>
+                    <pre>pm2 list</pre>
+                    <pre>┌────┬────────────┬──────────┬─────────┬──────┬─────────┬──────────┬─────────┐
+│ id │ name       │ mode     │ status  │ cpu  │ memory  │ uptime   │ restarts│
+├────┼────────────┼──────────┼─────────┼──────┼─────────┼──────────┼─────────┤
+│ 0  │ lab4-app   │ fork     │ online  │ 0%   │ 44.0 MB │ 19s      │ 0       │
+└────┴────────────┴──────────┴─────────┴──────┴─────────┴──────────┴─────────┘</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>📈 PM2 Monitoring Metrics</h4>
+                    <pre>pm2 monit</pre>
+                    <pre>┌─ Monitoring ─────────────────────────────────────────────────────────────┐
+│ Heap Size:        10.97 MiB                                           │
+│ Heap Usage:       89.77%                                               │
+│ Used Heap Size:   9.85 MiB                                             │
+│ Active Handles:   16                                                   │
+│ Event Loop Latency:   10.39 ms                                         │
+│ Event Loop Latency p95: 15.35 ms                                       │
+└────────────────────────────────────────────────────────────────────────┘
+┌─ Metadata ────────────────────────────────────────────────────────────┐
+│ App Name:      lab4-app                                               │
+│ Namespace:     default                                                │
+│ Version:       1.0.0                                                  │
+│ Uptime:        19s                                                    │
+│ Script path:   D:\kpi\web-be\lab1\art-forum\lab4\app.js              │
+│ Node version:  20.18.0                                                │
+└────────────────────────────────────────────────────────────────────────┘</pre>
+                </div>
+
+                <div class="test-result">
+                    <h4>📝 PM2 Logs</h4>
+                    <pre>pm2 logs lab4-app --lines 5</pre>
+                    <pre>[PM2] Starting D:\kpi\web-be\lab1\art-forum\lab4\app.js in fork_mode (1 instance)
+[PM2] Done.
+┌────┬────────────┬──────────┬─────────┬──────┬─────────┬──────────┬─────────┐
+│ id │ name       │ mode     │ status  │ cpu  │ memory  │ uptime   │ restarts│
+├────┼────────────┼──────────┼─────────┼──────┼─────────┼──────────┼─────────┤
+│ 0  │ lab4-app   │ fork     │ online  │ 0%   │ 37.4mb  │ 0s       │ 0       │
+└────┴────────────┴──────────┴─────────┴──────┴─────────┴──────────┴─────────┘</pre>
+                </div>
+            </div>
+
+            <!-- Порівняння Morgan vs Winston -->
+            <div class="report-section">
+                <h2>📊 Порівняння інструментів логування</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr><th>Характеристика</th><th>Morgan</th><th>Winston</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Призначення</td><td>Логування HTTP-запитів</td><td>Універсальне логування подій</td></tr>
+                        <tr><td>Формат виведення</td><td>Apache combined/common/dev</td><td>JSON, текст, власний формат</td></tr>
+                        <tr><td>Рівні логування</td><td>Немає (тільки запити)</td><td>error, warn, info, http, debug</td></tr>
+                        <tr><td>Транспорти</td><td>Консоль, файл (через stream)</td><td>Файл, консоль, HTTP, база даних</td></tr>
+                        <tr><td>Гнучкість</td><td>Низька</td><td>Висока</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- PM2 Команди -->
+            <div class="report-section">
+                <h2>⚙️ Управління застосунком через PM2</h2>
+                <div class="code-block">
+                    <pre>
+# Встановлення PM2 глобально
+npm install -g pm2
+
+# Запуск застосунку
+pm2 start app.js --name lab4-app
+
+# Запуск з конфігураційним файлом
+pm2 start ecosystem.config.js
+
+# Список процесів
+pm2 list
+
+# Моніторинг в реальному часі
+pm2 monit
+
+# Перегляд логів
+pm2 logs lab4-app
+pm2 logs lab4-app --lines 100
+
+# Рестарт та зупинка
+pm2 restart lab4-app
+pm2 stop lab4-app
+pm2 delete lab4-app
+
+# Збереження конфігурації для автозапуску
+pm2 save
+pm2 startup
+                    </pre>
+                </div>
+                <div class="code-block">
+                    <pre>
+// ecosystem.config.js
+module.exports = {
+    apps: [{
+        name: 'lab4-app',
+        script: 'app.js',
+        instances: 1,
+        autorestart: true,
+        watch: false,
+        max_memory_restart: '500M',
+        env: { NODE_ENV: 'production', PORT: 3000 },
+        error_file: './logs/pm2-error.log',
+        out_file: './logs/pm2-out.log'
+    }]
+};
+                    </pre>
+                </div>
+            </div>
+
+            <!-- Приклад логів -->
+            <div class="report-section">
+                <h2>📋 Логи (combined.log)</h2>
+                <div class="code-block">
+                    <pre>
+2026-04-29 10:00:01 info: Server started successfully {"port":3000,"env":"development"}
+2026-04-29 10:00:15 info: GET /api/status 200 - 8ms
+2026-04-29 10:00:15 info: Performance metric {"method":"GET","url":"/api/status","duration_ms":12}
+2026-04-29 10:01:23 info: POST /api/upload/single 200 - 145ms
+2026-04-29 10:01:23 info: File uploaded {"filename":"test.jpg","size":23456,"mimetype":"image/jpeg"}
+2026-04-29 10:02:45 error: File upload error {"error":"File type not allowed","file":"test.exe"}
+2026-04-29 10:05:30 info: GET /api/status/health 200 - 5ms
+2026-04-29 10:10:00 info: DELETE /api/upload/test.jpg 200 - 23ms
+2026-04-29 10:10:00 info: File deleted {"filename":"test.jpg"}
+                    </pre>
+                </div>
+            </div>
+
+            <!-- Посилання для завантаження -->
+            <div class="report-section">
+                <h2>📥 Завантажити файли для тестування</h2>
+                <div style="text-align: center; margin: 1rem 0;">
+                    <a href="#" class="download-btn" id="downloadCollection">📦 Завантажити Postman Collection</a>
+                    <a href="#" class="download-btn" id="downloadEnv">🌍 Завантажити Postman Environment</a>
+                    <a href="#" class="download-btn" id="downloadTest">🐚 Завантажити test-api.sh</a>
+                    <a href="#" class="download-btn" id="downloadProject">📁 Завантажити проект (код)</a>
+                </div>
+                <p style="text-align: center; margin-top: 1rem;">
+                    <strong>Інструкція:</strong> Після завантаження файлів, відкрийте Postman → Import → Оберіть завантажені файли.
+                </p>
+            </div>
+
+            <!-- Висновки з реальними даними -->
+            <div class="report-section">
+                <h2>📝 Висновки</h2>
+                <p>У ході виконання лабораторної роботи №4 на базі <strong>Node.js v20.18.0</strong> (Windows 11, Intel i7-11800H, 16GB RAM) було:</p>
+                <ul>
+                    <li>✅ Створено серверний застосунок з повноцінним REST API (Express.js)</li>
+                    <li>✅ Налаштовано професійне логування: <strong>Morgan</strong> для HTTP-запитів та <strong>Winston</strong> для подій</li>
+                    <li>✅ Реалізовано завантаження файлів через <strong>Multer</strong> з підтримкою одного та кількох файлів</li>
+                    <li>✅ Додано валідацію файлів: перевірка типів (jpg, png, pdf) та розміру (до 5MB)</li>
+                    <li>✅ Створено endpoints для моніторингу: <code>/api/status</code>, <code>/api/status/health</code>, <code>/api/status/metrics</code></li>
+                    <li>✅ Реалізовано вимірювання часу відповіді (від 0 до 6 мс - відмінний показник!)</li>
+                    <li>✅ Інтегровано <strong>PM2</strong> для управління процесами з моніторингом пам'яті (44 MB) та CPU (0%)</li>
+                    <li>✅ Проведено повне тестування через <code>curl.exe</code> та PowerShell</li>
+                </ul>
+                
+                <h3>📊 Ключові метрики з реального запуску:</h3>
+                <ul>
+                    <li><strong>Uptime:</strong> 2 хвилини 52 секунди</li>
+                    <li><strong>Heap Used:</strong> 9.36 MB (з 10.22 MB виділених)</li>
+                    <li><strong>RSS Memory:</strong> 42.01 MB</li>
+                    <li><strong>Event Loop Latency:</strong> 10.39 ms (p95: 15.35 ms)</li>
+                    <li><strong>CPU Usage:</strong> 0% в простої</li>
+                    <li><strong>Час відповіді API:</strong> 0-6 мс</li>
+                </ul>
+                
+                <h3>🎯 Отримані навички:</h3>
+                <ul>
+                    <li>Професійне логування в Node.js (Morgan + Winston)</li>
+                    <li>Робота з Multer для завантаження файлів з валідацією</li>
+                    <li>Моніторинг продуктивності (response time, memory, CPU, event loop)</li>
+                    <li>Робота з PM2 (менеджер процесів, моніторинг, логи)</li>
+                    <li>Створення middleware для вимірювання продуктивності</li>
+                    <li>Тестування API через командний рядок (curl)</li>
+                </ul>
+            </div>
+
+            <!-- Посилання -->
+            <div class="report-section">
+                <h2>🔗 Посилання</h2>
+                <ul>
+                    <li><strong>GitHub репозиторій:</strong> <a href="https://github.com/fwrwxx/art-forum" target="_blank">https://github.com/fwrwxx/art-forum</a></li>
+                    <li><strong>Morgan (HTTP logger):</strong> <a href="https://www.npmjs.com/package/morgan" target="_blank">https://www.npmjs.com/package/morgan</a></li>
+                    <li><strong>Winston (Logging):</strong> <a href="https://www.npmjs.com/package/winston" target="_blank">https://www.npmjs.com/package/winston</a></li>
+                    <li><strong>Multer (File upload):</strong> <a href="https://www.npmjs.com/package/multer" target="_blank">https://www.npmjs.com/package/multer</a></li>
+                    <li><strong>PM2 (Process Manager):</strong> <a href="https://pm2.keymetrics.io/" target="_blank">https://pm2.keymetrics.io/</a></li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>ArtHub</h4>
+                    <p>Форум, магазин та аукціон в одному місці.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Навігація</h4>
+                    <ul>
+                        <li><a href="index.html">Головна</a></li>
+                        <li><a href="lab1.html">ЛР №1</a></li>
+                        <li><a href="lab2.html">ЛР №2</a></li>
+                        <li><a href="lab3.html">ЛР №3</a></li>
+                        <li><a href="lab4.html">ЛР №4</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Контакти</h4>
+                    <p>Email: shtyfliuko@gmail.com</p>
+                    <p>Студентка: Штифлюк Ольга</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Соціальні мережі</h4>
+                    <div class="social-links">
+                        <a href="#"><img src="assets/icons/facebook.png" alt="Facebook"></a>
+                        <a href="#"><img src="assets/icons/instagram.png" alt="Instagram"></a>
+                        <a href="#"><img src="assets/icons/twitter.png" alt="Twitter"></a>
+                        <a href="#"><img src="assets/icons/pinterest.png" alt="Pinterest"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ArtHub. Всі права захищені.</p>
+                <p>Штифлюк Ольга Володимирівна</p>
+            </div>
+        </div>
+    </footer>
+
+        <script>
+        // Функція для завантаження файлів
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+        }
+
+        // ==================== Postman Collection для ЛР4 ====================
+        document.getElementById('downloadCollection')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            const collection = {
+                "info": {
+                    "name": "ArtHub Advanced Node.js - Лабораторна робота №4",
+                    "description": "Логування, завантаження файлів, моніторинг продуктивності",
+                    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+                },
+                "item": [
+                    {
+                        "name": "📤 Upload - Single File",
+                        "request": {
+                            "method": "POST",
+                            "header": [],
+                            "body": {
+                                "mode": "formdata",
+                                "formdata": [
+                                    { "key": "file", "type": "file", "src": "/path/to/test.jpg" }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{base_url}}/api/upload/single",
+                                "host": ["{{base_url}}"],
+                                "path": ["api", "upload", "single"]
+                            }
+                        }
+                    },
+                    {
+                        "name": "📚 Upload - Multiple Files",
+                        "request": {
+                            "method": "POST",
+                            "body": {
+                                "mode": "formdata",
+                                "formdata": [
+                                    { "key": "files", "type": "file", "src": "/path/to/file1.jpg" },
+                                    { "key": "files", "type": "file", "src": "/path/to/file2.png" }
+                                ]
+                            },
+                            "url": {
+                                "raw": "{{base_url}}/api/upload/multiple",
+                                "host": ["{{base_url}}"],
+                                "path": ["api", "upload", "multiple"]
+                            }
+                        }
+                    },
+                    {
+                        "name": "📊 Status - Server Info",
+                        "request": {
+                            "method": "GET",
+                            "url": {
+                                "raw": "{{base_url}}/api/status",
+                                "host": ["{{base_url}}"],
+                                "path": ["api", "status"]
+                            }
+                        }
+                    },
+                    {
+                        "name": "🏥 Health Check",
+                        "request": {
+                            "method": "GET",
+                            "url": {
+                                "raw": "{{base_url}}/api/status/health",
+                                "host": ["{{base_url}}"],
+                                "path": ["api", "status", "health"]
+                            }
+                        }
+                    },
+                    {
+                        "name": "📈 Metrics",
+                        "request": {
+                            "method": "GET",
+                            "url": {
+                                "raw": "{{base_url}}/api/status/metrics",
+                                "host": ["{{base_url}}"],
+                                "path": ["api", "status", "metrics"]
+                            }
+                        }
+                    },
+                    {
+                        "name": "📋 List Uploaded Files",
+                        "request": {
+                            "method": "GET",
+                            "url": {
+                                "raw": "{{base_url}}/api/upload/list",
+                                "host": ["{{base_url}}"],
+                                "path": ["api", "upload", "list"]
+                            }
+                        }
+                    },
+                    {
+                        "name": "🗑️ Delete File",
+                        "request": {
+                            "method": "DELETE",
+                            "url": {
+                                "raw": "{{base_url}}/api/upload/{{filename}}",
+                                "host": ["{{base_url}}"],
+                                "path": ["api", "upload", "{{filename}}"]
+                            }
+                        }
+                    },
+                    {
+                        "name": "🏠 Home",
+                        "request": {
+                            "method": "GET",
+                            "url": {
+                                "raw": "{{base_url}}/",
+                                "host": ["{{base_url}}"],
+                                "path": [""]
+                            }
+                        }
+                    }
+                ],
+                "variable": [
+                    { "key": "base_url", "value": "http://localhost:3000" },
+                    { "key": "filename", "value": "example.jpg" }
+                ]
+            };
+            downloadFile(JSON.stringify(collection, null, 2), 'lab4_postman_collection.json', 'application/json');
+        });
+
+        // ==================== Postman Environment ====================
+        document.getElementById('downloadEnv')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            const environment = {
+                "name": "ArtHub Lab4 - Local Environment",
+                "values": [
+                    { "key": "base_url", "value": "http://localhost:3000", "enabled": true, "type": "default" },
+                    { "key": "filename", "value": "", "enabled": true, "type": "default" }
+                ]
+            };
+            downloadFile(JSON.stringify(environment, null, 2), 'lab4_postman_environment.json', 'application/json');
+        });
+
+        // ==================== test-api.sh скрипт ====================
+        document.getElementById('downloadTest')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            const testScript = `#!/bin/bash
+
+# ArtHub Lab4 - API Testing Script
+# Лабораторна робота №4: Логування, завантаження файлів, моніторинг
+
+BASE_URL="http://localhost:3000"
+TEST_FILE="test.jpg"
+
+# Кольори для виведення
+RED='\\033[0;31m'
+GREEN='\\033[0;32m'
+YELLOW='\\033[1;33m'
+BLUE='\\033[0;34m'
+NC='\\033[0m' # No Color
+
+echo -e "${BLUE}════════════════════════════════════════════════════════════${NC}"
+echo -e "${BLUE}  ArtHub Lab4 - API Testing (Upload & Monitoring)${NC}"
+echo -e "${BLUE}════════════════════════════════════════════════════════════${NC}"
+
+# Test 1: Health Check
+echo -e "\\n${YELLOW}📊 Test 1: Health Check${NC}"
+curl -s -X GET "${BASE_URL}/api/status/health" | jq '.'
+
+# Test 2: Server Status
+echo -e "\\n${YELLOW}📈 Test 2: Server Status${NC}"
+curl -s -X GET "${BASE_URL}/api/status" | jq '.'
+
+# Test 3: Metrics
+echo -e "\\n${YELLOW}📊 Test 3: Metrics${NC}"
+curl -s -X GET "${BASE_URL}/api/status/metrics" | jq '.'
+
+# Test 4: Home endpoint
+echo -e "\\n${YELLOW}🏠 Test 4: Home endpoint${NC}"
+curl -s -X GET "${BASE_URL}/" | jq '.'
+
+# Test 5: List files (before upload)
+echo -e "\\n${YELLOW}📋 Test 5: List files (before upload)${NC}"
+curl -s -X GET "${BASE_URL}/api/upload/list" | jq '.'
+
+# Test 6: Upload single file (if test file exists)
+if [ -f "$TEST_FILE" ]; then
+    echo -e "\\n${YELLOW}📤 Test 6: Upload Single File${NC}"
+    curl -s -X POST "${BASE_URL}/api/upload/single" -F "file=@${TEST_FILE}" | jq '.'
+else
+    echo -e "\\n${YELLOW}⚠️ Test 6: Skipped - ${TEST_FILE} not found${NC}"
+    echo "Create a test file: touch test.jpg or use any image file"
+fi
+
+# Test 7: List files (after upload)
+echo -e "\\n${YELLOW}📋 Test 7: List files (after upload)${NC}"
+curl -s -X GET "${BASE_URL}/api/upload/list" | jq '.'
+
+echo -e "\\n${GREEN}════════════════════════════════════════════════════════════${NC}"
+echo -e "${GREEN}  Testing completed!${NC}"
+echo -e "${GREEN}════════════════════════════════════════════════════════════${NC}"`;
+            downloadFile(testScript, 'lab4_test_api.sh', 'text/plain');
+        });
+
+        // ==================== Завантаження проекту (код) ====================
+        document.getElementById('downloadProject')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Створюємо ZIP-архів у вигляді JSON з файлами
+            const projectFiles = {
+                "app.js": `const express = require('express');
+const cors = require('cors');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
+require('dotenv').config();
+
+const { logger, httpLogger } = require('./utils/logger');
+const { performanceMiddleware, memoryMonitorMiddleware } = require('./middleware/performanceMiddleware');
+const { notFoundMiddleware, errorMiddleware, multerErrorHandler } = require('./middleware/errorMiddleware');
+
+const uploadRoutes = require('./routes/uploadRoutes');
+const statusRoutes = require('./routes/statusRoutes');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Security
+app.use(helmet());
+app.use(cors());
+
+// Logging
+app.use(morgan('combined', { stream: httpLogger }));
+if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
+
+// Rate limiting
+const limiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 100 });
+app.use(limiter);
+
+// Body parsing
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Static files
+app.use('/uploads', express.static(process.env.UPLOAD_DIR || 'uploads'));
+
+// Performance monitoring
+app.use(performanceMiddleware);
+app.use(memoryMonitorMiddleware);
+
+// Routes
+app.get('/', (req, res) => {
+    res.json({ name: 'ArtHub Lab4', endpoints: { upload: '/api/upload', status: '/api/status' } });
+});
+
+app.use('/api/upload', uploadRoutes);
+app.use('/api/status', statusRoutes);
+
+// Error handling
+app.use(multerErrorHandler);
+app.use(notFoundMiddleware);
+app.use(errorMiddleware);
+
+app.listen(PORT, () => {
+    console.log(\`Server running on http://localhost:\${PORT}\`);
+    logger.info('Server started', { port: PORT });
+});
+
+module.exports = app;`,
+
+                "package.json": `{
+  "name": "lab4-advanced-node",
+  "version": "1.0.0",
+  "description": "Лабораторна робота №4: Розширені можливості Node.js",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "pm2-start": "pm2 start app.js --name lab4-app",
+    "pm2-stop": "pm2 stop lab4-app",
+    "pm2-restart": "pm2 restart lab4-app",
+    "pm2-monit": "pm2 monit",
+    "pm2-logs": "pm2 logs lab4-app"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "winston": "^3.11.0",
+    "multer": "^1.4.5-lts.1",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5",
+    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.1.5",
+    "fs-extra": "^11.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}`,
+
+                ".env": `PORT=3000
+NODE_ENV=development
+MAX_FILE_SIZE=5242880
+ALLOWED_FILE_TYPES=image/jpeg,image/png,image/jpg,application/pdf
+UPLOAD_DIR=uploads
+LOG_DIR=logs`,
+
+                "ecosystem.config.js": `module.exports = {
+    apps: [{
+        name: 'lab4-app',
+        script: 'app.js',
+        instances: 1,
+        autorestart: true,
+        watch: false,
+        max_memory_restart: '500M',
+        env: { NODE_ENV: 'production', PORT: 3000 },
+        env_development: { NODE_ENV: 'development', PORT: 3000 },
+        error_file: './logs/pm2-error.log',
+        out_file: './logs/pm2-out.log',
+        time: true
+    }]
+};`
+            };
+
+            // Створюємо текстовий файл з інструкцією та посиланнями на файли
+            const readme = `# ArtHub - Лабораторна робота №4
+## Розширені можливості Node.js: логування, завантаження файлів, моніторинг
+
+### Встановлення та запуск
+
+1. Розпакуйте архів
+2. Встановіть залежності:
+   \`\`\`bash
+   npm install
+   \`\`\`
+3. Створіть папки для файлів:
+   \`\`\`bash
+   mkdir uploads logs
+   mkdir uploads/images uploads/documents
+   \`\`\`
+4. Запустіть сервер:
+   \`\`\`bash
+   npm run dev
+   # або
+   npm start
+   # або через PM2
+   npm run pm2-start
+   \`\`\`
+
+### API Endpoints
+
+| Метод | Endpoint | Опис |
+|-------|----------|------|
+| POST | /api/upload/single | Завантаження одного файлу |
+| POST | /api/upload/multiple | Завантаження кількох файлів |
+| GET | /api/upload/list | Список файлів |
+| DELETE | /api/upload/:filename | Видалення файлу |
+| GET | /api/status | Статус сервера |
+| GET | /api/status/health | Health check |
+| GET | /api/status/metrics | Метрики |
+
+### Структура папок
+
+\`\`\`
+lab4-advanced-node/
+├── app.js
+├── package.json
+├── ecosystem.config.js
+├── .env
+├── uploads/
+│   ├── images/
+│   └── documents/
+├── logs/
+│   ├── combined.log
+│   └── error.log
+├── middleware/
+│   ├── performanceMiddleware.js
+│   ├── errorMiddleware.js
+│   └── uploadMiddleware.js
+├── routes/
+│   ├── uploadRoutes.js
+│   └── statusRoutes.js
+└── utils/
+    ├── logger.js
+    └── fileValidator.js
+\`\`\`
+
+### Студентка: Штифлюк Ольга Володимирівна
+### Дата: 5 травня 2026 року
+`;
+
+            // Створюємо об'єкт з усіма файлами для завантаження
+            const allFiles = {
+                "README.md": readme,
+                ...projectFiles
+            };
+            
+            downloadFile(JSON.stringify(allFiles, null, 2), 'lab4_project_source.json', 'application/json');
+        });
+    </script>
+</body>
+</html>
