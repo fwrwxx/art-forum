@@ -38,4 +38,7 @@ build/
 
 # Temporary files
 tmp/
-temp/
+temp/test.txt
+*.log
+uploads/
+node_modules/
