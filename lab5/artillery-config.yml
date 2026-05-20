@@ -1,0 +1,27 @@
+config:
+  target: "http://localhost:5000"
+  phases:
+    - duration: 60
+      arrivalRate: 10
+      name: "Warm up"
+    - duration: 120
+      arrivalRate: 20
+      rampTo: 50
+      name: "Load test"
+  plugins:
+    expect: {}
+  processor: "./artillery-functions.js"
+
+scenarios:
+  - name: "Get books"
+    flow:
+      - get:
+          url: "/api/books"
+          expect:
+            - statusCode: 200
+            - contentType: json
+      - think: 1
+      - get:
+          url: "/api/books?page=2&limit=20"
+          expect:
+            - statusCode: 200

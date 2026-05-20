@@ -1,0 +1,457 @@
+{
+  "info": {
+    "name": "Book Club API - Лабораторна робота №5",
+    "description": "Тестування безпеки та продуктивності Node.js API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "book_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "📚 1. Базова інформація",
+      "item": [
+        {
+          "name": "Головна сторінка",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Swagger Documentation",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api-docs",
+              "host": ["{{base_url}}"],
+              "path": ["api-docs"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🔐 2. Автентифікація",
+      "item": [
+        {
+          "name": "Реєстрація користувача",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 201\", function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "pm.test(\"Response has token\", function () {",
+                  "    pm.response.to.have.jsonBody('token');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"{{$randomFullName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Логін користувача (зберегти токен)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test(\"Response has token\", function () {",
+                  "    pm.response.to.have.jsonBody('token');",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "pm.collectionVariables.set(\"auth_token\", jsonData.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "📖 3. Книги (без автентифікації)",
+      "item": [
+        {
+          "name": "Отримати всі книги (без кешу - перший запит)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": ["{{base_url}}"],
+              "path": ["api", "books"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Отримати всі книги (з кешем - другий запит)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": ["{{base_url}}"],
+              "path": ["api", "books"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Отримати книги з пагінацією",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/books?page=1&limit=5",
+              "host": ["{{base_url}}"],
+              "path": ["api", "books"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Отримати книги за жанром",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/books?genre=Fiction",
+              "host": ["{{base_url}}"],
+              "path": ["api", "books"],
+              "query": [
+                {
+                  "key": "genre",
+                  "value": "Fiction"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Отримати книгу за ID (зберегти ID)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data._id) {",
+                  "    pm.collectionVariables.set(\"book_id\", jsonData.data._id);",
+                  "} else if (jsonData._id) {",
+                  "    pm.collectionVariables.set(\"book_id\", jsonData._id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/books/{{book_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "books", "{{book_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "✍️ 4. Управління книгами (Admin only)",
+      "item": [
+        {
+          "name": "Створити нову книгу (потрібен токен адміна)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"The Midnight Library\",\n    \"author\": \"Matt Haig\",\n    \"genre\": \"Fiction\",\n    \"publishedYear\": 2020,\n    \"description\": \"Between life and death there is a library.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": ["{{base_url}}"],
+              "path": ["api", "books"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Оновити книгу",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"The Midnight Library - Updated\",\n    \"averageRating\": 4.5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/books/{{book_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "books", "{{book_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Видалити книгу",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/books/{{book_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "books", "{{book_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "⚡ 5. Тестування продуктивності",
+      "item": [
+        {
+          "name": "Тест часу відповіді (без кешу)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response time is less than 200ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(200);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/books?cache=false",
+              "host": ["{{base_url}}"],
+              "path": ["api", "books"],
+              "query": [
+                {
+                  "key": "cache",
+                  "value": "false"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Тест часу відповіді (з кешем)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Response time is less than 50ms\", function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(50);",
+                  "});",
+                  "pm.test(\"Response from cache\", function () {",
+                  "    pm.response.to.have.jsonBody('source', 'cache');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": ["{{base_url}}"],
+              "path": ["api", "books"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "🛡️ 6. Тестування безпеки",
+      "item": [
+        {
+          "name": "Тест rate limiting (швидкі запити)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": ["{{base_url}}"],
+              "path": ["api", "books"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Спроба доступу без токену (очікується 401)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Test Book\",\n    \"author\": \"Test Author\",\n    \"genre\": \"Fiction\",\n    \"publishedYear\": 2024\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/books",
+              "host": ["{{base_url}}"],
+              "path": ["api", "books"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Спроба реєстрації з некоректним email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Invalid User\",\n    \"email\": \"invalid-email\",\n    \"password\": \"123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
